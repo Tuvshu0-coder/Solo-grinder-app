@@ -31,12 +31,9 @@ UI = [
 C = {k: v for k, v, _ in UI}
 
 # Character ramps (sprite-only). Hair: base, shade, highlight. Skin: base, shade.
-SKINS = [("#fce1cc", "#ebb18c"), ("#ebb18c", "#c98d6b"), ("#b97a55", "#8a5638"), ("#6e4630", "#4a2e20")]
-HAIRS = [("#574a50", "#413436", "#7f7091"),   # ink with violet sheen
-         ("#8a5a40", "#5c3a28", "#b5835e"),   # brown
-         ("#f2d38a", "#c9a456", "#fff4cf"),   # blonde
-         ("#d7d6d6", "#a9a4aa", "#ffffff")]   # silver
-HAIR_NAMES = ["ink", "brown", "blonde", "silver"]
+SKINS = [("#f9d6c6", "#c38877"), ("#eab38e", "#c98d6b"), ("#b97a55", "#8a5638"), ("#6e4630", "#4a2e20")]
+HAIRS = [("#5c341f",), ("#2b2230",), ("#d9a650",), ("#c9c6cc",)]   # brown (original), black, blonde, silver
+HAIR_NAMES = ["brown", "black", "blonde", "silver"]
 RANKS = [("E", C["gray"], C["ink"]), ("D", C["mint"], C["ink"]), ("C", C["peach"], C["ink"]),
          ("B", C["violet"], C["white"]), ("A", C["butter"], C["ink"]), ("S", C["ink"], C["butter"])]
 
@@ -149,29 +146,28 @@ COIN_PAL = {"o": C["ink"], "g": C["butter"], "s": C["peach-dark"], "w": C["white
 CHECK = ["......#", ".....##", "#...##.", "##.##..", ".###...", "..#...."]
 ARROW = ["#####", ".###.", "..#.."]
 
-# 64x64 starter, hand-finished pixel art (see design/sprites/hero-starter.txt). Legend:
-# O ink | H/h/j hair base/shade/highlight | S/s skin | I iris (violet) | Y eye shine
-# W/w/v jacket white / light / deep (checker dither in places) | C/c scarf violet / violet-dark
-# G/g trousers gray / dark gray
-HERO = (ROOT / "sprites" / "hero-starter.txt").read_text(encoding="utf-8").splitlines()[:64]
-assert len(HERO) == 64 and all(len(r) == 64 for r in HERO)
-SHADOW = ["." * 16 + "x" * 34 + "." * 14, "." * 12 + "x" * 42 + "." * 10, "." * 16 + "x" * 34 + "." * 14]
+# Starter character (design supplied by the team), 32x64 canvas — design/sprites/hero-starter.txt. Legend:
+# O outline/eyes | S/s skin | H hair (fringe) | D/d hoodie | T/t tee | J/j/k jeans | B/b/n backpack | R/W high-tops
+HERO_W, HERO_H = 32, 64
+HERO = (ROOT / "sprites" / "hero-starter.txt").read_text(encoding="utf-8").splitlines()[:HERO_H]
+assert len(HERO) == HERO_H and all(len(r) == HERO_W for r in HERO)
+SHADOW = ["." * 6 + "x" * 20 + "." * 6, "." * 3 + "x" * 26 + "." * 3, "." * 6 + "x" * 20 + "." * 6]
+OUTFIT = {  # starter outfit colours (fixed; outfits from the store replace these letters' pixels)
+    "O": "#170e2a", "D": "#2a1d42", "d": "#221939", "T": "#8d879c", "t": "#717289",
+    "J": "#425072", "j": "#2b355a", "k": "#24274c", "B": "#e9b358", "b": "#be842e", "n": "#92660e",
+    "R": "#6d0c2f", "W": "#fafafc",
+}
 
 
 def hero_palette(skin, hair):
-    return {
-        "O": C["ink"], "E": C["ink"], "I": C["violet"], "Y": C["white"],
-        "S": skin[0], "s": skin[1], "H": hair[0], "h": hair[1], "j": hair[2],
-        "W": C["white"], "w": C["line"], "v": C["gray"],
-        "C": C["violet"], "c": C["violet-dark"], "G": C["gray"], "g": C["ink-2"],
-    }
+    return {**OUTFIT, "S": skin[0], "s": skin[1], "H": hair[0]}
 
 
 def hero_block(skin, hair, scale, label=""):
-    sprite = runs_svg(HERO, hero_palette(skin, hair), 64, 64, scale, cls="char-sprite")
-    shadow = runs_svg(SHADOW, {"x": C["line"]}, 64, 3, scale, cls="char-shadow", extra_attrs=f'style="top:{60*scale}px"')
+    sprite = runs_svg(HERO, hero_palette(skin, hair), HERO_W, HERO_H, scale, cls="char-sprite")
+    shadow = runs_svg(SHADOW, {"x": C["line"]}, HERO_W, 3, scale, cls="char-shadow", extra_attrs=f'style="top:{61*scale}px"')
     cap = f"<figcaption>{label}</figcaption>" if label else ""
-    return f'<figure class="char" style="width:{64*scale}px;--px-step:{scale}px">{shadow}{sprite}{cap}</figure>'
+    return f'<figure class="char" style="width:{HERO_W*scale}px;--px-step:{scale}px">{shadow}{sprite}{cap}</figure>'
 
 
 # ---------------------------------------------------------------- page
@@ -211,9 +207,9 @@ def main():
     cursor = runs_svg(CURSOR, {"#": C["violet"]}, 4, 7, 4, cls="sprite cursor")
     ui_sw = "".join(swatch(n, h, r, i < 7) for i, (n, h, r) in enumerate(UI))
     ranks = "".join(f'<div class="rank nine9 f-rank-{r}" style="color:{fg}">{r}</div>' for r, _, fg in RANKS)
-    hero_big = hero_block(SKINS[1], HAIRS[0], 4)
-    hero_card = hero_block(SKINS[1], HAIRS[0], 3)
-    variants = "".join(hero_block(SKINS[i], HAIRS[i], 2, f"skin {i+1} · {HAIR_NAMES[i]}") for i in range(4))
+    hero_big = hero_block(SKINS[0], HAIRS[0], 6)
+    hero_card = hero_block(SKINS[0], HAIRS[0], 4)
+    variants = "".join(hero_block(SKINS[i], HAIRS[i], 3, f"skin {i+1} · {HAIR_NAMES[i]}") for i in range(4))
 
     html = TEMPLATE
     subs = {
@@ -353,16 +349,16 @@ ul.rules { margin: 0; padding-left: 44px; } ul.rules li::marker { content: "▶ 
 </nav>
 <div class="wrap">
   <div class="banner nine9 f-banner">Pixel style guide v3</div>
-  <div class="dialog nine10 f-dialog" style="margin-bottom:8px">Main palette: <span class="vio">white</span> first, mint second, violet third. Characters take their vibe from handheld-era monster sprites — 3/4 battle stance, clean ink line art, a big sweeping silhouette — but every pixel is original.</div>
+  <div class="dialog nine10 f-dialog" style="margin-bottom:8px">Main palette: <span class="vio">white</span> first, mint second, violet third. Pixel art is the star: characters are clean sprites shown at whole-number scales on calm white cards.</div>
 
   <h2>__CURSOR__ 1. Palette</h2><div class="rule"></div>
   <div class="sws">__UI_SWATCHES__</div>
   <p class="note" style="margin-top:16px">First seven (violet names) = the team's main palette. The rest are functional helpers, used sparingly.</p>
 
-  <h2>__CURSOR__ 2. Character — starter (64×64, draft)</h2><div class="rule"></div>
+  <h2>__CURSOR__ 2. Character — starter</h2><div class="rule"></div>
   <div class="grid g2">
     <div class="panel nine9 f-panel" style="align-self:start">
-      <div class="head">Starter · ×4</div>
+      <div class="head">Starter · ×6</div>
       <div class="row" style="justify-content:center; padding: 6px 0 14px">__HERO_BIG__</div>
     </div>
     <div class="grid" style="align-content:start">
@@ -385,18 +381,17 @@ ul.rules { margin: 0; padding-left: 44px; } ul.rules li::marker { content: "▶ 
   </div>
   <div style="margin-top:28px">
     <div class="panel nine9 f-panel">
-        <h3>How he is drawn</h3>
+        <h3>Starter character</h3>
         <ul class="rules">
-          <li>3/4 fighting stance: open hand thrust forward, other hand on the hip, feet planted wide.</li>
-          <li>Long violet scarf sweeping back — the big shape that makes the silhouette.</li>
-          <li>Clean ink line art: front parts draw their lines over the parts behind.</li>
-          <li>Starter: white zip jacket, violet scarf, gray trousers, white sneakers.</li>
-          <li>Layers: body + hair → outfit → hat; pet beside. Idle bob 1px.</li>
+          <li>Design supplied by the team: front-facing, hood up, hands relaxed, 22×55 pixels on a 32×64 canvas.</li>
+          <li>Starter outfit: navy hoodie over a gray tee, mustard backpack, blue jeans, maroon high-tops.</li>
+          <li>Skin (2 tones) and hair (the fringe under the hood) are recolored on the same pixels.</li>
+          <li>Layers: body → outfit (hoodie, tee, jeans, shoes, backpack) → hat on top of the hood; pet beside. Idle bob 1px.</li>
         </ul>
       </div>
   </div>
   <div class="panel nine9 f-panel" style="margin-top:28px">
-    <div class="head">Skin × hair swaps · ×2</div>
+    <div class="head">Skin × hair swaps · ×3</div>
     <div class="row" style="justify-content:space-around; padding-top:8px">__VARIANTS__</div>
   </div>
 

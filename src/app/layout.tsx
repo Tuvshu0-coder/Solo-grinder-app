@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin", "cyrillic"] });
+// Departure Mono — SIL Open Font License 1.1, © Helena Zhang (see ./fonts/DepartureMono-OFL.txt)
+const pixel = localFont({
+  src: "./fonts/DepartureMono-Regular.woff2",
+  variable: "--font-pixel",
+  display: "block",
+});
 
 export const metadata: Metadata = {
   title: "Solo Grinding",
@@ -12,7 +17,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="mn">
-      <body className={`${inter.variable} min-h-screen antialiased`}>{children}</body>
+      <body className={`${pixel.variable} min-h-screen`}>{children}</body>
     </html>
   );
 }

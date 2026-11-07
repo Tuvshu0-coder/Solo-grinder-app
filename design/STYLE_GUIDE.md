@@ -31,24 +31,31 @@ warning · peach = store.
 
 **Ranks:** E gray · D mint · C peach · B violet · A butter · S ink with butter letter.
 
-## Character — starter (64×64, draft)
+## Character — starter
 
-Pixel data: `design/sprites/hero-starter.txt` (one letter per pixel; legend in `build-style-guide.py`).
-- 3/4 fighting stance facing right: open hand thrust forward, other hand on the hip, feet planted wide.
-- Long violet scarf sweeping back — the big shape that defines the silhouette.
-- Clean 1px ink line art: front parts draw their lines over the parts behind; gray shading with a
-  little checker dithering; solid violet highlight strokes on the spiky hair.
-- Near (bigger) eye on the left of the face, narrow far eye by the nose — correct 3/4 anatomy.
-- Starter outfit: white zip jacket, violet scarf, gray trousers, white sneakers.
-- Layers: body + hair → outfit → hat; pet stands beside. Idle: whole sprite bobs 1 art pixel.
-- Shown at ×2 (lists), ×3 (player card), ×4 (hero) — whole-number scales only.
+**Design supplied by the team** (reference image, 2026-11-08), converted pixel-for-pixel into
+`design/sprites/hero-starter.txt` — 22×55 pixels on a 32×64 canvas (8 rows of headroom for hats).
+If this design comes from a third-party artist, confirm its license allows use and credit the
+artist here and in the README.
+
+- Front-facing, hood up, hands relaxed. Starter outfit: navy hoodie over a gray tee, mustard
+  backpack, blue jeans, maroon high-tops.
+- Legend: `O` outline/eyes · `S/s` skin · `H` hair (fringe) · `D/d` hoodie · `T/t` tee ·
+  `J/j/k` jeans · `B/b/n` backpack · `R/W` high-tops.
+- Layers: body → outfit (hoodie, tee, jeans, shoes, backpack) → hat on top of the hood; pet beside.
+  Idle: whole sprite bobs 1 art pixel.
+- Shown at ×3 (lists), ×4 (player card), ×6 (hero) — whole-number scales only.
 
 **Swaps (same pixels, different colors):**
 
-| | 1 | 2 | 3 | 4 |
+| | 1 (original) | 2 | 3 | 4 |
 |---|---|---|---|---|
-| Skin base / shade | `#fce1cc` / `#ebb18c` | `#ebb18c` / `#c98d6b` | `#b97a55` / `#8a5638` | `#6e4630` / `#4a2e20` |
-| Hair base / shade / highlight | ink `#574a50 #413436 #7f7091` | brown `#8a5a40 #5c3a28 #b5835e` | blonde `#f2d38a #c9a456 #fff4cf` | silver `#d7d6d6 #a9a4aa #ffffff` |
+| Skin base / shade | `#f9d6c6` / `#c38877` | `#eab38e` / `#c98d6b` | `#b97a55` / `#8a5638` | `#6e4630` / `#4a2e20` |
+| Hair | brown `#5c341f` | black `#2b2230` | blonde `#d9a650` | silver `#c9c6cc` |
+
+**Starter outfit colors (sprite-only):** outline `#170e2a` · hoodie `#2a1d42`/`#221939` · tee
+`#8d879c`/`#717289` · jeans `#425072`/`#2b355a`/`#24274c` · backpack `#e9b358`/`#be842e`/`#92660e`
+· high-tops `#6d0c2f`/`#fafafc`.
 
 ## Type
 
