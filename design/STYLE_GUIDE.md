@@ -31,15 +31,17 @@ warning · peach = store.
 
 **Ranks:** E gray · D mint · C peach · B violet · A butter · S ink with butter letter.
 
-## Character — starter (48×48, draft)
+## Character — starter (64×64, draft)
 
-Hand-placed pixels (`HERO` in `build-style-guide.py`).
-- 3/4 battle stance facing right: near fist raised forward, far hand in the hoodie pocket.
-- Spiky swept-back hair (fixed style), 3 tones with a highlight sheen; stern eyes with a violet iris.
-- Ink outline outside and ink lines between body parts; checker dithering on the hoodie hem.
-- Starter outfit: white hoodie with drawstrings and pocket, violet trousers, mint sneakers with peach soles.
+Pixel data: `design/sprites/hero-starter.txt` (one letter per pixel; legend in `build-style-guide.py`).
+- 3/4 fighting stance facing right: open hand thrust forward, other hand on the hip, feet planted wide.
+- Long violet scarf sweeping back — the big shape that defines the silhouette.
+- Clean 1px ink line art: front parts draw their lines over the parts behind; gray shading with a
+  little checker dithering; solid violet highlight strokes on the spiky hair.
+- Near (bigger) eye on the left of the face, narrow far eye by the nose — correct 3/4 anatomy.
+- Starter outfit: white zip jacket, violet scarf, gray trousers, white sneakers.
 - Layers: body + hair → outfit → hat; pet stands beside. Idle: whole sprite bobs 1 art pixel.
-- Shown at ×3 (variants), ×4 (player card) and ×6 — always whole-number scales.
+- Shown at ×2 (lists), ×3 (player card), ×4 (hero) — whole-number scales only.
 
 **Swaps (same pixels, different colors):**
 
