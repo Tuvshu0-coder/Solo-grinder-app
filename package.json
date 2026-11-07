@@ -10,7 +10,8 @@
     "db:setup": "prisma db push && prisma db seed",
     "db:reset": "prisma db push --force-reset && prisma db seed",
     "test": "tsx --test src/lib/*.test.ts",
-    "test:integration": "node -e \"require('fs').rmSync('prisma/test.db',{force:true})\" && cross-env DATABASE_URL=file:./test.db prisma db push --skip-generate && cross-env DATABASE_URL=file:./test.db tsx prisma/seed.ts && cross-env DATABASE_URL=file:./test.db tsx scripts/integration-test.ts"
+    "test:integration": "node -e \"require('fs').rmSync('prisma/test.db',{force:true})\" && cross-env DATABASE_URL=file:./test.db prisma db push --skip-generate && cross-env DATABASE_URL=file:./test.db tsx prisma/seed.ts && cross-env DATABASE_URL=file:./test.db tsx scripts/integration-test.ts",
+    "db:demo": "tsx scripts/demo-data.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",

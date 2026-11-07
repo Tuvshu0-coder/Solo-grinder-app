@@ -2,6 +2,7 @@ import Link from "next/link";
 import { logout } from "@/actions/auth";
 import { NavLinks } from "./NavLinks";
 import { Icon } from "./pixel";
+import { COLORS } from "@/lib/sprites";
 
 export { Bar, RankBadge } from "./pixel";
 
@@ -16,7 +17,7 @@ export async function Flash({ searchParams }: { searchParams: SP }) {
   return (
     <div className={`dialog mb-6 flex items-start gap-3 ${err ? "text-rose" : ""}`} role={err ? "alert" : "status"}>
       <span className="pt-2">
-        <Icon name="cursor" scale={3} color={err ? "#c9636b" : undefined} />
+        <Icon name="cursor" scale={3} color={err ? COLORS.rose : undefined} />
       </span>
       <span>{err ?? msg}</span>
     </div>

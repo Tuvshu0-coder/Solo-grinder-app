@@ -163,8 +163,8 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
     background: var(--violet) repeating-linear-gradient(90deg, transparent 0 22px, var(--violet-dark) 22px 24px);
   }
   .track.butter > i { background: var(--butter) repeating-linear-gradient(90deg, transparent 0 22px, var(--peach-dark) 22px 24px); }
-  .seg { display: inline-flex; align-items: center; gap: 4px; }
-  .seg > b { width: 14px; height: 18px; background: var(--violet); clip-path: var(--notch-1); }
+  .seg { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; }
+  .seg > b { width: 14px; min-width: 6px; flex: 0 1 auto; height: 18px; background: var(--violet); clip-path: var(--notch-1); }
   .seg > b.off { height: 4px; background: var(--line); clip-path: none; }
   .seg.butter > b:not(.off) { background: var(--butter); box-shadow: inset 0 -4px 0 var(--peach-dark); }
 
@@ -188,6 +188,9 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
   .tab:hover { color: var(--ink); }
   .tab.on { color: var(--ink); box-shadow: inset 0 -6px 0 var(--violet); }
 
+  /* ---------- dashboard helpers ---------- */
+  .dash-sep { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px) left top / 100% 2px no-repeat; }
+
   /* ---------- character ---------- */
   .hero { position: relative; display: inline-block; flex: none; }
   .hero > .hero-shadow { position: absolute; left: 0; }
@@ -196,4 +199,8 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
 
 @media (prefers-reduced-motion: reduce) {
   .hero > .hero-sprite { animation: none; }
+}
+@media (max-width: 700px) {
+  .dash-days span:nth-child(even) { visibility: hidden; }
+  .nav-inner > nav { order: 3; width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 }

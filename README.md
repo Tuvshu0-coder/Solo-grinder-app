@@ -22,6 +22,7 @@ Logins: **admin / admin123** (admin panel). Register a new account for a student
 | `npm test` | Unit tests for the pure rules (`src/lib/rules.test.ts`) |
 | `npm run test:integration` | Engine end-to-end on a scratch `prisma/test.db` |
 | `npm run db:reset` | Wipe and reseed `dev.db` (**deletes all data**) |
+| `npm run db:demo` | Fill the `demo` account (demo / demo123) with 10 days of realistic activity — resets only that account |
 
 ## Where things live
 
@@ -35,6 +36,21 @@ Logins: **admin / admin123** (admin panel). Register a new account for a student
 | `src/lib/time.ts` | Mongolia-time (UTC+8) day/week boundaries |
 | `src/actions/*` | Server actions (forms) |
 | `src/app/(app)/*` | Student pages · `src/app/admin/*` admin pages |
+
+## Pixel UI
+
+The look is defined in `design/` (see `design/STYLE_GUIDE.md`; open `design/style-guide.html` for a preview).
+
+- `python -P design/build-style-guide.py` — rebuilds the style-guide preview
+- `python -P design/build-app-assets.py` — regenerates `src/app/pixel.css` (palette + pixel frames) and
+  `src/lib/sprites.ts` (character, coin, icons). Never edit those two generated files by hand.
+- Sprites are palette arrays rendered by `<Sprite>` / `<Hero>` in `src/components/pixel.tsx`.
+
+## Credits
+
+- Font: **Departure Mono** © Helena Zhang — SIL Open Font License 1.1 (`src/app/fonts/DepartureMono-OFL.txt`).
+- Starter character design: supplied by the team. If it comes from a third-party artist, add their name
+  and license here.
 
 ## Design notes
 

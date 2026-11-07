@@ -18,7 +18,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
           { href: "/guild", label: "Guild" },
         ]}
       />
-      <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
+      <main className="mx-auto max-w-[1240px] px-4 pt-8 pb-16">{children}</main>
     </>
   );
 }
