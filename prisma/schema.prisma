@@ -1,0 +1,160 @@
+// Solo Grinding — ERD (section 9) + fields agreed in the requirements review.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Level row id == level number. minXp default = 20 * L^2 (level 1 = 0).
+model Level {
+  id    Int    @id
+  minXp Int
+  rank  String // E, D, C, B, A, S
+  users User[]
+}
+
+model User {
+  id             Int       @id @default(autoincrement())
+  username       String    @unique
+  password       String
+  role           String    @default("STUDENT") // STUDENT | ADMIN
+  levelId        Int       @default(1)
+  level          Level     @relation(fields: [levelId], references: [id])
+  totalXp        Int       @default(0)
+  streak         Int       @default(0)
+  lastActiveDate String? // Mongolia-time day (YYYY-MM-DD) of last on-time completion
+  guildLeftAt    DateTime? // 7-day guild cooldown
+  isSuspended    Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+
+  subjects     Subject[]
+  xpLogs       XpLog[]
+  dailyQuests  DailyQuest[]
+  achievements UserAchievement[]
+  guildMember  GuildMember?
+  sessions     Session[]
+}
+
+model Session {
+  id        String   @id
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+}
+
+model Subject {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name   String
+  tasks  Task[]
+}
+
+model Task {
+  id             Int       @id @default(autoincrement())
+  subjectId      Int
+  subject        Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  title          String
+  type           String // HOMEWORK | LAB | INDEPENDENT | EXAM_PREP | READING
+  deadline       DateTime
+  createdAt      DateTime  @default(now())
+  completedAt    DateTime?
+  status         String    @default("TODO") // TODO | LATE | DONE
+  multiplier     Float?
+  xpEarned       Int       @default(0)
+  deadlineEdited Boolean   @default(false)
+}
+
+model XpLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source    String // TASK | QUEST | ACHIEVEMENT | GUILD_QUEST
+  sourceId  Int?
+  xpAmount  Int
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model QuestTemplate {
+  id          Int          @id @default(autoincrement())
+  title       String
+  goalType    String // COMPLETE_N | COMPLETE_EARLY | COMPLETE_TYPE | CLEAR_OVERDUE
+  taskType    String? // only for COMPLETE_TYPE
+  targetValue Int
+  xpReward    Int
+  isActive    Boolean      @default(true)
+  dailyQuests DailyQuest[]
+}
+
+model DailyQuest {
+  id          Int           @id @default(autoincrement())
+  userId      Int
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId  Int
+  template    QuestTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  questDate   String // YYYY-MM-DD (Mongolia time)
+  progress    Int           @default(0)
+  isCompleted Boolean       @default(false)
+
+  @@index([userId, questDate])
+}
+
+model Achievement {
+  id            Int               @id @default(autoincrement())
+  name          String
+  description   String
+  conditionType String // STREAK | TASKS_DONE | EARLY_TASKS | LEVEL
+  threshold     Int
+  xpReward      Int
+  users         UserAchievement[]
+}
+
+model UserAchievement {
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId Int
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  unlockedAt    DateTime    @default(now())
+
+  @@id([userId, achievementId])
+}
+
+model Guild {
+  id         Int           @id @default(autoincrement())
+  name       String
+  inviteCode String        @unique
+  createdAt  DateTime      @default(now())
+  members    GuildMember[]
+  quests     GuildQuest[]
+}
+
+model GuildMember {
+  guildId  Int
+  guild    Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId   Int      @unique
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     String   @default("MEMBER") // LEADER | MEMBER
+  joinedAt DateTime @default(now())
+
+  @@id([guildId, userId])
+}
+
+model GuildQuest {
+  id          Int     @id @default(autoincrement())
+  guildId     Int
+  guild       Guild   @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  title       String
+  goalType    String
+  taskType    String?
+  targetValue Int
+  progress    Int     @default(0)
+  weekStart   String // YYYY-MM-DD of Monday (Mongolia time)
+  isCompleted Boolean @default(false)
+
+  @@unique([guildId, weekStart])
+}
