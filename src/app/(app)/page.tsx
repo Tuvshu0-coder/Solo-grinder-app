@@ -59,7 +59,7 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
             <span className="muted">No.{String(user.id).padStart(3, "0")}</span>
           </div>
           <div className="flex flex-wrap items-center gap-x-6">
-            <Hero scale={4} />
+            <Hero scale={3} />
             <div className="min-w-[200px] flex-1">
               <div className="truncate text-3xl">{user.username}</div>
               <Stat label="Level" value={String(user.levelId)} />

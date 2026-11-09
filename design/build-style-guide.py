@@ -31,8 +31,8 @@ UI = [
 C = {k: v for k, v, _ in UI}
 
 # Character ramps (sprite-only). Hair: base, shade, highlight. Skin: base, shade.
-SKINS = [("#f9d6c6", "#c38877"), ("#eab38e", "#c98d6b"), ("#b97a55", "#8a5638"), ("#6e4630", "#4a2e20")]
-HAIRS = [("#5c341f",), ("#2b2230",), ("#d9a650",), ("#c9c6cc",)]   # brown (original), black, blonde, silver
+SKINS = [("#f8dcca", "#deb2a0"), ("#eab38e", "#c98d6b"), ("#b97a55", "#8a5638"), ("#6e4630", "#4a2e20")]
+HAIRS = [("#422e22", "#6e503a"), ("#1f1a1e", "#3d3640"), ("#c9963f", "#e8c46a"), ("#9a97a3", "#c9c6cc")]   # base, highlight: brown (original), black, blonde, silver
 HAIR_NAMES = ["brown", "black", "blonde", "silver"]
 RANKS = [("E", C["gray"], C["ink"]), ("D", C["mint"], C["ink"]), ("C", C["peach"], C["ink"]),
          ("B", C["violet"], C["white"]), ("A", C["butter"], C["ink"]), ("S", C["ink"], C["butter"])]
@@ -146,26 +146,27 @@ COIN_PAL = {"o": C["ink"], "g": C["butter"], "s": C["peach-dark"], "w": C["white
 CHECK = ["......#", ".....##", "#...##.", "##.##..", ".###...", "..#...."]
 ARROW = ["#####", ".###.", "..#.."]
 
-# Starter character (design supplied by the team), 32x64 canvas — design/sprites/hero-starter.txt. Legend:
-# O outline/eyes | S/s skin | H hair (fringe) | D/d hoodie | T/t tee | J/j/k jeans | B/b/n backpack | R/W high-tops
-HERO_W, HERO_H = 32, 64
+# Starter character (design supplied by the team), 52x92 canvas — design/sprites/hero-starter.txt. Legend:
+# O outline | S/s skin | H/J hair + highlight | P pupils | B/b lenses | W white | R blush | M mouth
+# U/u/g uniform | q collar shade | L buttons | F/f shoes
+HERO_W, HERO_H = 52, 92
 HERO = (ROOT / "sprites" / "hero-starter.txt").read_text(encoding="utf-8").splitlines()[:HERO_H]
 assert len(HERO) == HERO_H and all(len(r) == HERO_W for r in HERO)
-SHADOW = ["." * 6 + "x" * 20 + "." * 6, "." * 3 + "x" * 26 + "." * 3, "." * 6 + "x" * 20 + "." * 6]
-OUTFIT = {  # starter outfit colours (fixed; outfits from the store replace these letters' pixels)
-    "O": "#170e2a", "D": "#2a1d42", "d": "#221939", "T": "#8d879c", "t": "#717289",
-    "J": "#425072", "j": "#2b355a", "k": "#24274c", "B": "#e9b358", "b": "#be842e", "n": "#92660e",
-    "R": "#6d0c2f", "W": "#fafafc",
+SHADOW_TOP = 86
+SHADOW = ["." * 10 + "x" * 32 + "." * 10, "." * 6 + "x" * 40 + "." * 6, "." * 10 + "x" * 32 + "." * 10]
+OUTFIT = {  # starter outfit colours (fixed; store outfits replace these)
+    "O": "#16121c", "P": "#3a281e", "B": "#c4d6e8", "b": "#688496", "W": "#ececf2", "R": "#f0b6ac", "M": "#783a3a",
+    "U": "#222642", "u": "#3a4066", "g": "#16182c", "q": "#bec0cc", "L": "#d6ac48", "F": "#0e0c10", "f": "#3c3840",
 }
 
 
 def hero_palette(skin, hair):
-    return {**OUTFIT, "S": skin[0], "s": skin[1], "H": hair[0]}
+    return {**OUTFIT, "S": skin[0], "s": skin[1], "H": hair[0], "J": hair[1]}
 
 
 def hero_block(skin, hair, scale, label=""):
     sprite = runs_svg(HERO, hero_palette(skin, hair), HERO_W, HERO_H, scale, cls="char-sprite")
-    shadow = runs_svg(SHADOW, {"x": C["line"]}, HERO_W, 3, scale, cls="char-shadow", extra_attrs=f'style="top:{61*scale}px"')
+    shadow = runs_svg(SHADOW, {"x": C["line"]}, HERO_W, 3, scale, cls="char-shadow", extra_attrs=f'style="top:{SHADOW_TOP*scale}px"')
     cap = f"<figcaption>{label}</figcaption>" if label else ""
     return f'<figure class="char" style="width:{HERO_W*scale}px;--px-step:{scale}px">{shadow}{sprite}{cap}</figure>'
 
@@ -207,9 +208,9 @@ def main():
     cursor = runs_svg(CURSOR, {"#": C["violet"]}, 4, 7, 4, cls="sprite cursor")
     ui_sw = "".join(swatch(n, h, r, i < 7) for i, (n, h, r) in enumerate(UI))
     ranks = "".join(f'<div class="rank nine9 f-rank-{r}" style="color:{fg}">{r}</div>' for r, _, fg in RANKS)
-    hero_big = hero_block(SKINS[0], HAIRS[0], 6)
-    hero_card = hero_block(SKINS[0], HAIRS[0], 4)
-    variants = "".join(hero_block(SKINS[i], HAIRS[i], 3, f"skin {i+1} · {HAIR_NAMES[i]}") for i in range(4))
+    hero_big = hero_block(SKINS[0], HAIRS[0], 3)
+    hero_card = hero_block(SKINS[0], HAIRS[0], 3)
+    variants = "".join(hero_block(SKINS[i], HAIRS[i], 2, f"skin {i+1} · {HAIR_NAMES[i]}") for i in range(4))
 
     html = TEMPLATE
     subs = {
@@ -358,7 +359,7 @@ ul.rules { margin: 0; padding-left: 44px; } ul.rules li::marker { content: "▶ 
   <h2>__CURSOR__ 2. Character — starter</h2><div class="rule"></div>
   <div class="grid g2">
     <div class="panel nine9 f-panel" style="align-self:start">
-      <div class="head">Starter · ×6</div>
+      <div class="head">Starter · ×4</div>
       <div class="row" style="justify-content:center; padding: 6px 0 14px">__HERO_BIG__</div>
     </div>
     <div class="grid" style="align-content:start">
@@ -383,15 +384,15 @@ ul.rules { margin: 0; padding-left: 44px; } ul.rules li::marker { content: "▶ 
     <div class="panel nine9 f-panel">
         <h3>Starter character</h3>
         <ul class="rules">
-          <li>Design supplied by the team: front-facing, hood up, hands relaxed, 22×55 pixels on a 32×64 canvas.</li>
-          <li>Starter outfit: navy hoodie over a gray tee, mustard backpack, blue jeans, maroon high-tops.</li>
-          <li>Skin (2 tones) and hair (the fringe under the hood) are recolored on the same pixels.</li>
-          <li>Layers: body → outfit (hoodie, tee, jeans, shoes, backpack) → hat on top of the hood; pet beside. Idle bob 1px.</li>
+          <li>Design supplied by the team: front-facing student with glasses, arms folded holding a book, 46×86 pixels on a 52×92 canvas.</li>
+          <li>Starter outfit: navy school uniform with gold buttons and white collar, black shoes.</li>
+          <li>Skin (2 tones) and hair (base + highlight) are recolored on the same pixels.</li>
+          <li>Layers: body + hair → outfit (uniform, shoes) → hat; pet beside. Idle bob 1px.</li>
         </ul>
       </div>
   </div>
   <div class="panel nine9 f-panel" style="margin-top:28px">
-    <div class="head">Skin × hair swaps · ×3</div>
+    <div class="head">Skin × hair swaps · ×2</div>
     <div class="row" style="justify-content:space-around; padding-top:8px">__VARIANTS__</div>
   </div>
 

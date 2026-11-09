@@ -33,29 +33,23 @@ warning · peach = store.
 
 ## Character — starter
 
-**Design supplied by the team** (reference image, 2026-11-08), converted pixel-for-pixel into
-`design/sprites/hero-starter.txt` — 22×55 pixels on a 32×64 canvas (8 rows of headroom for hats).
-If this design comes from a third-party artist, confirm its license allows use and credit the
-artist here and in the README.
+**Design supplied by the team** (reference image, 2026-11-09), converted pixel-for-pixel into
+`design/sprites/hero-starter.txt` — 46×86 pixels on a 52×92 canvas. If this design comes from a
+third-party artist, confirm its license allows use and credit the artist here and in the README.
 
-- Front-facing, hood up, hands relaxed. Starter outfit: navy hoodie over a gray tee, mustard
-  backpack, blue jeans, maroon high-tops.
-- Legend: `O` outline/eyes · `S/s` skin · `H` hair (fringe) · `D/d` hoodie · `T/t` tee ·
-  `J/j/k` jeans · `B/b/n` backpack · `R/W` high-tops.
-- Layers: body → outfit (hoodie, tee, jeans, shoes, backpack) → hat on top of the hood; pet beside.
-  Idle: whole sprite bobs 1 art pixel.
-- Shown at ×3 (lists), ×4 (player card), ×6 (hero) — whole-number scales only.
+- Front-facing student with glasses, arms folded holding a book. Starter outfit: navy school
+  uniform with gold buttons and a white collar, black shoes.
+- Legend: `O` outline · `S/s` skin · `H/J` hair + highlight · `P` pupils · `B/b` lenses · `W` white ·
+  `R` blush · `M` mouth · `U/u/g` uniform · `q` collar shade · `L` buttons · `F/f` shoes.
+- Layers: body + hair → outfit (uniform, shoes) → hat; pet beside. Idle: whole sprite bobs 1 art pixel.
+- Shown at ×2 (lists), ×3 (dashboard player card), ×4 (hero) — whole-number scales only.
 
 **Swaps (same pixels, different colors):**
 
 | | 1 (original) | 2 | 3 | 4 |
 |---|---|---|---|---|
-| Skin base / shade | `#f9d6c6` / `#c38877` | `#eab38e` / `#c98d6b` | `#b97a55` / `#8a5638` | `#6e4630` / `#4a2e20` |
-| Hair | brown `#5c341f` | black `#2b2230` | blonde `#d9a650` | silver `#c9c6cc` |
-
-**Starter outfit colors (sprite-only):** outline `#170e2a` · hoodie `#2a1d42`/`#221939` · tee
-`#8d879c`/`#717289` · jeans `#425072`/`#2b355a`/`#24274c` · backpack `#e9b358`/`#be842e`/`#92660e`
-· high-tops `#6d0c2f`/`#fafafc`.
+| Skin base / shade | `#f8dcca` / `#deb2a0` | `#eab38e` / `#c98d6b` | `#b97a55` / `#8a5638` | `#6e4630` / `#4a2e20` |
+| Hair base / highlight | brown `#422e22` / `#6e503a` | black `#1f1a1e` / `#3d3640` | blonde `#c9963f` / `#e8c46a` | silver `#9a97a3` / `#c9c6cc` |
 
 ## Type
 

@@ -1,7 +1,7 @@
 // Pixel-art building blocks. Sprite data comes from src/lib/sprites.ts (generated from design/).
 import type { CSSProperties } from "react";
 import {
-  COIN, COIN_PALETTE, COLORS, FLAME_PALETTE, HERO, HERO_HAIRS, HERO_OUTFIT, HERO_SHADOW, HERO_SKINS,
+  COIN, COIN_PALETTE, COLORS, FLAME_PALETTE, HERO, HERO_HAIRS, HERO_OUTFIT, HERO_SHADOW, HERO_SHADOW_TOP, HERO_SKINS,
   ICON_CHECK, ICON_CURSOR, ICON_FLAME, ICON_LOCK, LOCK_PALETTE, RANK_STYLE,
   type Palette, type SpriteData,
 } from "@/lib/sprites";
@@ -53,11 +53,12 @@ export function Sprite({
 /** The player's character with ground shadow and 1px idle bob. */
 export function Hero({ skin = 0, hair = 0, scale = 4, bob = true }: { skin?: number; hair?: number; scale?: number; bob?: boolean }) {
   const s = HERO_SKINS[skin] ?? HERO_SKINS[0];
-  const palette: Palette = { ...HERO_OUTFIT, S: s[0], s: s[1], H: HERO_HAIRS[hair] ?? HERO_HAIRS[0] };
+  const h = HERO_HAIRS[hair] ?? HERO_HAIRS[0];
+  const palette: Palette = { ...HERO_OUTFIT, S: s[0], s: s[1], H: h[0], J: h[1] };
   const style = { width: HERO.w * scale, height: HERO.h * scale, "--px-step": `${scale}px` } as CSSProperties;
   return (
     <span className="hero" style={style}>
-      <Sprite data={HERO_SHADOW} palette={{ x: COLORS.line }} scale={scale} className="hero-shadow" style={{ top: 61 * scale }} />
+      <Sprite data={HERO_SHADOW} palette={{ x: COLORS.line }} scale={scale} className="hero-shadow" style={{ top: HERO_SHADOW_TOP * scale }} />
       <Sprite data={HERO} palette={palette} scale={scale} className={bob ? "hero-sprite" : ""} title="Таны дүр" />
     </span>
   );
