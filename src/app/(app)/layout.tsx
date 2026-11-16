@@ -13,6 +13,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
         links={[
           { href: "/", label: "Dashboard" },
           { href: "/tasks", label: "Даалгавар" },
+          { href: "/pomodoro", label: "Pomodoro" },
           { href: "/subjects", label: "Хичээл" },
           { href: "/achievements", label: "Achievement" },
           { href: "/guild", label: "Guild" },
