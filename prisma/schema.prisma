@@ -36,6 +36,8 @@ model User {
   achievements UserAchievement[]
   guildMember  GuildMember?
   sessions     Session[]
+  quizAttempts QuizAttempt[]
+  quizReports  QuizReport[]
 }
 
 model Session {
@@ -58,6 +60,7 @@ model Task {
   subjectId      Int
   subject        Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   title          String
+  topic          String    @default("") // rule 2: lesson topic (2–100 chars), used by the AI quiz
   type           String // HOMEWORK | LAB | INDEPENDENT | EXAM_PREP | READING
   deadline       DateTime
   createdAt      DateTime  @default(now())
@@ -66,13 +69,15 @@ model Task {
   multiplier     Float?
   xpEarned       Int       @default(0)
   deadlineEdited Boolean   @default(false)
+  quizBlockedReason String? // rule 25: why no AI quiz can be made for this topic
+  quizAttempt    QuizAttempt?
 }
 
 model XpLog {
   id        Int      @id @default(autoincrement())
   userId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  source    String // TASK | QUEST | ACHIEVEMENT | GUILD_QUEST
+  source    String // TASK | QUEST | ACHIEVEMENT | GUILD_QUEST | AI_QUIZ
   sourceId  Int?
   xpAmount  Int
   createdAt DateTime @default(now())
@@ -108,7 +113,7 @@ model Achievement {
   id            Int               @id @default(autoincrement())
   name          String
   description   String
-  conditionType String // STREAK | TASKS_DONE | EARLY_TASKS | LEVEL
+  conditionType String // STREAK | TASKS_DONE | EARLY_TASKS | LEVEL | PERFECT_QUIZ
   threshold     Int
   xpReward      Int
   users         UserAchievement[]
@@ -157,4 +162,88 @@ model GuildQuest {
   isCompleted Boolean @default(false)
 
   @@unique([guildId, weekStart])
+}
+
+// ---------- AI quiz (rules 23–30) ----------
+
+// One generated question. Reused for the same subject + topic for 30 days (rule 28).
+model QuizQuestion {
+  id           Int          @id @default(autoincrement())
+  subjectKey   String // normalized subject name
+  topicKey     String // normalized topic
+  rank         String // rank the question was generated for
+  question     String
+  options      String // JSON array of 4 strings
+  correctIndex Int // index into options
+  isInvalid    Boolean      @default(false) // admin confirmed a report (rule 29)
+  createdAt    DateTime     @default(now())
+  answers      QuizAnswer[]
+
+  @@index([subjectKey, topicKey, createdAt])
+}
+
+// One quiz per DONE task (rule 23). taskId is cleared if the task is deleted with its subject.
+model QuizAttempt {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId      Int?         @unique
+  task        Task?        @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  subjectName String
+  topic       String
+  status      String       @default("IN_PROGRESS") // IN_PROGRESS | FINISHED
+  score       Int          @default(0)
+  xpEarned    Int          @default(0)
+  startedAt   DateTime     @default(now())
+  finishedAt  DateTime?
+  answers     QuizAnswer[]
+
+  @@index([userId, startedAt])
+}
+
+model QuizAnswer {
+  id          Int          @id @default(autoincrement())
+  attemptId   Int
+  attempt     QuizAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId  Int
+  question    QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  position    Int // 0..4
+  optionOrder String // JSON permutation: display index -> original option index (rule 26)
+  servedAt    DateTime? // when the 30-second timer started
+  answeredAt  DateTime?
+  chosenIndex Int? // original option index
+  outcome     String? // CORRECT | WRONG | TIMEOUT | LEFT
+  isCorrect   Boolean      @default(false)
+  report      QuizReport?
+
+  @@unique([attemptId, position])
+}
+
+model QuizReport {
+  id         Int        @id @default(autoincrement())
+  answerId   Int        @unique
+  answer     QuizAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  userId     Int
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reason     String
+  status     String     @default("PENDING") // PENDING | ACCEPTED | REJECTED
+  createdAt  DateTime   @default(now())
+  reviewedAt DateTime?
+
+  @@index([status])
+}
+
+// Gemini call log for the admin AI stats.
+model AiLog {
+  id        Int      @id @default(autoincrement())
+  kind      String // GENERATED | REUSED | REJECTED_TOPIC | ERROR
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Setting {
+  key   String @id
+  value String
 }

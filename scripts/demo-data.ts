@@ -12,6 +12,11 @@ const TITLES = [
   "Шалгалтын бэлтгэл — 1-р бүлэг", "Унших: 4-р бүлэг", "Лаб 4 — Индекс", "Форм validation", "Матриц бодлого",
 ];
 
+/** "Лаб 3 — SQL JOIN" → "SQL JOIN"; titles without a dash are used as-is. */
+function topicOf(title: string): string {
+  return title.split(/[—:]/).pop()!.trim();
+}
+
 async function main() {
   const now = Date.now();
   const user = await prisma.user.upsert({
@@ -21,6 +26,7 @@ async function main() {
   });
   await prisma.subject.deleteMany({ where: { userId: user.id } });
   await prisma.xpLog.deleteMany({ where: { userId: user.id } });
+  await prisma.quizAttempt.deleteMany({ where: { userId: user.id } });
   await prisma.dailyQuest.deleteMany({ where: { userId: user.id } });
   await prisma.userAchievement.deleteMany({ where: { userId: user.id } });
   await prisma.user.update({ where: { id: user.id }, data: { totalXp: 0, levelId: 1, streak: 0, lastActiveDate: null } });
@@ -39,7 +45,7 @@ async function main() {
       const lateOne = k === 7;
       const deadline = lateOne ? new Date(doneAt.getTime() - 5 * HOUR) : new Date(created.getTime() + (k % 4 === 0 ? 2.4 : 6) * DAY);
       const t = await prisma.task.create({
-        data: { subjectId: subjects[k % 3].id, title: TITLES[k % TITLES.length], type: TYPES[k % 5], createdAt: created, deadline },
+        data: { subjectId: subjects[k % 3].id, title: TITLES[k % TITLES.length], topic: topicOf(TITLES[k % TITLES.length]), type: TYPES[k % 5], createdAt: created, deadline },
       });
       await completeTask(user.id, t.id, doneAt);
     }
@@ -48,7 +54,7 @@ async function main() {
   // today: quests first, then one early completion so today's progress shows
   await ensureDailyQuests(user.id);
   const t = await prisma.task.create({
-    data: { subjectId: subjects[0].id, title: "Лаб 5 — Transaction", type: "LAB", createdAt: new Date(now - 3 * DAY), deadline: new Date(now + 4 * DAY) },
+    data: { subjectId: subjects[0].id, title: "Лаб 5 — Transaction", topic: "Transaction ба ACID", type: "LAB", createdAt: new Date(now - 3 * DAY), deadline: new Date(now + 4 * DAY) },
   });
   await completeTask(user.id, t.id);
 
@@ -63,7 +69,7 @@ async function main() {
   for (const o of open) {
     await prisma.task.create({
       data: {
-        subjectId: subjects[o.s].id, title: o.title, type: o.type,
+        subjectId: subjects[o.s].id, title: o.title, topic: topicOf(o.title), type: o.type,
         createdAt: new Date(now + o.created), deadline: new Date(now + o.deadline),
         status: o.deadline < 0 ? "LATE" : "TODO",
       },

@@ -17,7 +17,7 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
   const today = dayKey();
   const fromDay = addDays(today, -13);
 
-  const [nextLevel, todayXp, quests, upcoming, done, history, recent] = await Promise.all([
+  const [nextLevel, todayXp, quests, upcoming, done, history, recent, quiz] = await Promise.all([
     prisma.level.findUnique({ where: { id: user.levelId + 1 } }),
     xpToday(prisma, user.id),
     prisma.dailyQuest.findMany({ where: { userId: user.id, questDate: today }, include: { template: true }, orderBy: { id: "asc" } }),
@@ -30,6 +30,7 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
     prisma.task.findMany({ where: { subject: { userId: user.id }, status: "DONE" }, select: { multiplier: true } }),
     prisma.xpLog.findMany({ where: { userId: user.id, createdAt: { gte: dayStart(fromDay) } } }),
     prisma.xpLog.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" }, take: 6 }),
+    prisma.quizAttempt.aggregate({ where: { userId: user.id, status: "FINISHED" }, _avg: { score: true }, _count: true }),
   ]);
 
   const floor = user.level.minXp;
@@ -146,6 +147,11 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
               </>
             )}
           </div>
+          <div className="dash-sep mt-4 flex items-center justify-between gap-3 pt-3">
+            <span>AI тестийн дундаж</span>
+            <span className="badge badge-butter">{quiz._avg.score == null ? "—" : `${quiz._avg.score.toFixed(1)}/5`}</span>
+          </div>
+          <p className="muted m-0">{quiz._count} тест өгсөн</p>
         </section>
 
         {/* ---------- xp chart ---------- */}

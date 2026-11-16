@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { createTask, deleteTask, editDeadline } from "@/actions/student";
 import { canEditDeadline, DEADLINE_MAX_MS, DEADLINE_MIN_MS } from "@/lib/rules";
 import { TASK_TYPES, multiplierLabel } from "@/lib/labels";
+import { QUIZ_WINDOW_MS, TOPIC_MAX, TOPIC_MIN } from "@/lib/quiz-rules";
 import { DAY, toLocalInput } from "@/lib/time";
 import { Flash, PageTitle, type SP } from "@/components/ui";
 import { CompleteButton, StatusBadge, TaskSummary } from "@/components/TaskRow";
@@ -23,7 +24,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
       ...(f === "open" ? { status: { in: ["TODO", "LATE"] } } : f === "done" ? { status: "DONE" } : {}),
     },
     orderBy: f === "done" ? { completedAt: "desc" } : { deadline: "asc" },
-    include: { subject: true },
+    include: { subject: true, quizAttempt: { select: { status: true, score: true, xpEarned: true } } },
   });
 
   const minDl = toLocalInput(new Date(now.getTime() + DEADLINE_MIN_MS));
@@ -42,7 +43,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
           Эхлээд <Link href="/subjects" className="text-accent-2 hover:underline">хичээл нэмнэ үү</Link>.
         </div>
       ) : (
-        <form action={createTask} className="card mb-4 grid gap-3 md:grid-cols-[1fr_1fr_2fr_1fr_auto] md:items-end">
+        <form action={createTask} className="card mb-4 grid gap-3 md:grid-cols-[1fr_1fr_1.5fr_1.5fr_1fr_auto] md:items-end">
           <div>
             <label className="label">Хичээл</label>
             <select name="subjectId" className="input" required>
@@ -62,6 +63,10 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
           <div>
             <label className="label">Нэр</label>
             <input name="title" className="input" placeholder="ж: Лаб 3 — SQL JOIN" required maxLength={120} />
+          </div>
+          <div>
+            <label className="label">Хичээлийн сэдэв</label>
+            <input name="topic" className="input" placeholder="ж: SQL JOIN төрлүүд" required minLength={TOPIC_MIN} maxLength={TOPIC_MAX} />
           </div>
           <div>
             <label className="label">Deadline (3 цаг – 30 хоног)</label>
@@ -98,9 +103,12 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
                   )}
                 </div>
                 {t.status === "DONE" ? (
-                  <div className="text-right text-sm">
-                    <div className="font-semibold text-good">+{t.xpEarned} XP</div>
-                    <div className="text-xs text-muted">{multiplierLabel(t.multiplier)}</div>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <QuizCell task={t} now={now} />
+                    <div className="text-right text-sm">
+                      <div className="font-semibold text-good">+{t.xpEarned} XP</div>
+                      <div className="text-xs text-muted">{multiplierLabel(t.multiplier)}</div>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex flex-wrap items-center gap-2">
@@ -129,4 +137,25 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
       </div>
     </>
   );
+}
+
+/** AI quiz entry for a DONE task (rule 23). */
+function QuizCell({
+  task,
+  now,
+}: {
+  task: { id: number; topic: string; completedAt: Date | null; quizBlockedReason: string | null; quizAttempt: { status: string; score: number; xpEarned: number } | null };
+  now: Date;
+}) {
+  const a = task.quizAttempt;
+  if (a?.status === "FINISHED")
+    return (
+      <Link href={`/quiz/${task.id}`} className="badge badge-vl">
+        AI тест {a.score}/5 · +{a.xpEarned} XP
+      </Link>
+    );
+  if (a) return <Link href={`/quiz/${task.id}`} className="btn-sec">Тест үргэлжлүүлэх</Link>;
+  if (!task.topic || task.quizBlockedReason) return null;
+  if (!task.completedAt || now.getTime() - task.completedAt.getTime() > QUIZ_WINDOW_MS) return null;
+  return <Link href={`/quiz/${task.id}`} className="btn-sec">AI тест</Link>;
 }

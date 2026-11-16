@@ -1,7 +1,7 @@
 # Solo Grinding
 
 Хичээлийг тоглоом болгох систем — Next.js 15 + Prisma + SQLite.
-Implements the requirements in `../section8_revised_mn.txt` (rules 1–22).
+Implements the requirements document (section 8, rules 1–30), including the Gemini AI quiz.
 
 ## Run
 
@@ -12,6 +12,20 @@ npm run dev          # http://localhost:3000
 ```
 
 Logins: **admin / admin123** (admin panel). Register a new account for a student.
+
+In VS Code: open the folder and press **F5** ("Next.js: dev server") — it runs `npm run dev` and opens the browser.
+
+### AI quiz (Gemini)
+
+Add to `.env` (server-side only, never sent to the browser):
+
+```
+GEMINI_API_KEY=your-free-google-ai-studio-key
+# GEMINI_MODEL=gemini-3.1-flash-lite   (default)
+```
+
+Without a key students see «Тест одоогоор боломжгүй». For offline demos set `AI_QUIZ_MOCK=1`
+instead — it generates placeholder questions (the admin AI page shows a warning while it is on).
 
 ## Scripts
 
@@ -33,6 +47,9 @@ Logins: **admin / admin123** (admin panel). Register a new account for a student
 | `src/lib/rules.ts` | Pure rule functions: multiplier, cap, deadline, streak |
 | `src/lib/game.ts` | Engine: `grantXp`, `completeTask`, quests, achievements, maintenance |
 | `src/lib/guild.ts` | Membership removal / succession, weekly leaderboard |
+| `src/lib/quiz-rules.ts` | Pure AI-quiz rules: reward table, eligibility, topic, output validation |
+| `src/lib/quiz.ts` | AI quiz engine: start / reuse questions, 30 s timer, scoring, reports |
+| `src/lib/gemini.ts` | Gemini REST client (only subject, topic, rank are sent) + mock |
 | `src/lib/time.ts` | Mongolia-time (UTC+8) day/week boundaries |
 | `src/actions/*` | Server actions (forms) |
 | `src/app/(app)/*` | Student pages · `src/app/admin/*` admin pages |
@@ -59,3 +76,9 @@ The look is defined in `design/` (see `design/STYLE_GUIDE.md`; open `design/styl
   Monday's date, so it rolls over on its own.
 - **Every XP change goes through `grantXp()`**, which enforces the 400/day cap and writes `XpLog`.
 - Kicking a member does **not** start the 7-day cooldown (only leaving voluntarily does).
+- **AI quiz timing is enforced on the server**: each question's 30 s starts when it is first served;
+  late answers count as wrong. Switching tab / reloading / navigating away while a question is shown
+  counts it as wrong (`/api/quiz/abandon`). Reloading never resets the timer.
+- A topic Gemini rejects (off-topic / too general) is stored on the task, so it isn't sent again.
+- An accepted report marks the question invalid (never reused) and re-scores only the reporter's attempt.
+- Tasks created before this update have no topic, so they can't be quizzed.

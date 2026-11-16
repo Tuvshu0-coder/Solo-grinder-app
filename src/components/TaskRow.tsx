@@ -35,7 +35,7 @@ export function TaskSummary({
   task,
   compact,
 }: {
-  task: { title: string; type: string; deadline: Date; status: string; subject: { name: string } };
+  task: { title: string; topic?: string; type: string; deadline: Date; status: string; subject: { name: string } };
   compact?: boolean;
 }) {
   const left = timeLeft(task.deadline);
@@ -55,6 +55,7 @@ export function TaskSummary({
       <div className="truncate">{task.title}</div>
       <div className="flex flex-wrap gap-x-4">
         <span className="muted">{task.subject.name}</span>
+        {task.topic && <span className="muted">Сэдэв: {task.topic}</span>}
         <span className="muted">{TASK_TYPES[task.type as TaskType] ?? task.type}</span>
         <span className="muted">{fmt(task.deadline)}</span>
         {task.status !== "DONE" && <span className={left.tone}>{left.text}</span>}

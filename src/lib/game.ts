@@ -25,7 +25,7 @@ export async function grantXp(
   tx: Tx,
   userId: number,
   amount: number,
-  source: "TASK" | "QUEST" | "ACHIEVEMENT" | "GUILD_QUEST",
+  source: "TASK" | "QUEST" | "ACHIEVEMENT" | "GUILD_QUEST" | "AI_QUIZ",
   sourceId: number | null,
   now = new Date(),
 ): Promise<number> {
@@ -223,7 +223,7 @@ export async function completeTask(userId: number, taskId: number, now = new Dat
   });
 }
 
-async function checkAchievements(tx: Tx, userId: number, now: Date): Promise<string[]> {
+export async function checkAchievements(tx: Tx, userId: number, now: Date): Promise<string[]> {
   const user = await tx.user.findUniqueOrThrow({ where: { id: userId }, include: { achievements: true } });
   const owned = new Set(user.achievements.map((a) => a.achievementId));
   const candidates = (await tx.achievement.findMany()).filter((a) => !owned.has(a.id));
@@ -231,6 +231,7 @@ async function checkAchievements(tx: Tx, userId: number, now: Date): Promise<str
 
   const doneCount = await tx.task.count({ where: { subject: { userId }, status: "DONE" } });
   const earlyCount = await tx.task.count({ where: { subject: { userId }, status: "DONE", multiplier: { gt: 1 } } });
+  const perfectQuizzes = await tx.quizAttempt.count({ where: { userId, status: "FINISHED", score: { gte: 5 } } });
 
   const unlocked: string[] = [];
   for (const a of candidates) {
@@ -243,7 +244,9 @@ async function checkAchievements(tx: Tx, userId: number, now: Date): Promise<str
             ? earlyCount
             : a.conditionType === "LEVEL"
               ? user.levelId
-              : -1;
+              : a.conditionType === "PERFECT_QUIZ"
+                ? perfectQuizzes
+                : -1;
     if (value < a.threshold) continue;
     await tx.userAchievement.create({ data: { userId, achievementId: a.id, unlockedAt: now } }); // rule 14
     await grantXp(tx, userId, a.xpReward, "ACHIEVEMENT", a.id, now); // inside the cap (rule 9)

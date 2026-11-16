@@ -6,11 +6,12 @@ import { Bar, PageTitle } from "@/components/ui";
 
 export default async function AchievementsPage() {
   const user = await requireUser();
-  const [all, mine, doneCount, earlyCount] = await Promise.all([
+  const [all, mine, doneCount, earlyCount, perfectQuizzes] = await Promise.all([
     prisma.achievement.findMany({ orderBy: [{ conditionType: "asc" }, { threshold: "asc" }] }),
     prisma.userAchievement.findMany({ where: { userId: user.id } }),
     prisma.task.count({ where: { subject: { userId: user.id }, status: "DONE" } }),
     prisma.task.count({ where: { subject: { userId: user.id }, status: "DONE", multiplier: { gt: 1 } } }),
+    prisma.quizAttempt.count({ where: { userId: user.id, status: "FINISHED", score: { gte: 5 } } }),
   ]);
   const unlocked = new Map(mine.map((m) => [m.achievementId, m.unlockedAt]));
   const current: Record<string, number> = {
@@ -18,6 +19,7 @@ export default async function AchievementsPage() {
     TASKS_DONE: doneCount,
     EARLY_TASKS: earlyCount,
     LEVEL: user.levelId,
+    PERFECT_QUIZ: perfectQuizzes,
   };
 
   return (

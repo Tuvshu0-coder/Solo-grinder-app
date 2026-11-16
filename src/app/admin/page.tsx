@@ -8,7 +8,7 @@ export default async function AdminStats({ searchParams }: { searchParams: SP })
   const weekAgo = new Date(Date.now() - 7 * DAY);
   const todayStart = dayStart(dayKey());
 
-  const [students, suspended, activeIds, guilds, doneTasks, doneToday, lateTasks, xp] = await Promise.all([
+  const [students, suspended, activeIds, guilds, doneTasks, doneToday, lateTasks, xp, quizToday, pendingReports] = await Promise.all([
     prisma.user.count({ where: { role: "STUDENT" } }),
     prisma.user.count({ where: { role: "STUDENT", isSuspended: true } }),
     prisma.xpLog.findMany({ where: { createdAt: { gte: weekAgo }, source: "TASK" }, distinct: ["userId"], select: { userId: true } }),
@@ -17,6 +17,8 @@ export default async function AdminStats({ searchParams }: { searchParams: SP })
     prisma.task.count({ where: { status: "DONE", completedAt: { gte: todayStart } } }),
     prisma.task.count({ where: { status: "LATE" } }),
     prisma.xpLog.aggregate({ _sum: { xpAmount: true } }),
+    prisma.quizAttempt.count({ where: { startedAt: { gte: todayStart } } }),
+    prisma.quizReport.count({ where: { status: "PENDING" } }),
   ]);
 
   const stats = [
@@ -28,6 +30,8 @@ export default async function AdminStats({ searchParams }: { searchParams: SP })
     ["Өнөөдөр дуусгасан", doneToday],
     ["Хоцорсон (дуусаагүй)", lateTasks],
     ["Олгосон нийт XP", xp._sum.xpAmount ?? 0],
+    ["Өнөөдрийн AI тест", quizToday],
+    ["Хянах AI мэдээлэл", pendingReports],
   ] as const;
 
   return (

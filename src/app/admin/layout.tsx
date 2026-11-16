@@ -14,6 +14,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           { href: "/admin/quests", label: "Quest загвар" },
           { href: "/admin/achievements", label: "Achievement" },
           { href: "/admin/levels", label: "Level" },
+          { href: "/admin/ai", label: "AI тест" },
         ]}
       />
       <main className="mx-auto max-w-[1240px] px-4 pt-8 pb-16">{children}</main>

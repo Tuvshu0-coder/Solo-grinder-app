@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { completeTask } from "@/lib/game";
 import { canEditDeadline, validateDeadline } from "@/lib/rules";
+import { validateTopic } from "@/lib/quiz-rules";
 import { TASK_TYPES, multiplierLabel } from "@/lib/labels";
 import { fromLocalInput } from "@/lib/time";
 import { back, int, str } from "./util";
@@ -45,6 +46,7 @@ export async function createTask(fd: FormData) {
   const user = await student();
   const subjectId = int(fd, "subjectId");
   const title = str(fd, "title");
+  const topic = str(fd, "topic");
   const type = str(fd, "type");
   const deadline = fromLocalInput(str(fd, "deadline"));
 
@@ -52,10 +54,12 @@ export async function createTask(fd: FormData) {
   if (!subject) back("/tasks", "err", "Даалгавар заавал нэг хичээлд харьяалагдана."); // rule 2
   if (!(type in TASK_TYPES)) back("/tasks", "err", "Даалгаврын төрлийг сонгоно уу.");
   if (!title || title.length > 120) back("/tasks", "err", "Даалгаврын нэр 1–120 тэмдэгт байна.");
+  const topicErr = validateTopic(topic); // rule 2
+  if (topicErr) back("/tasks", "err", topicErr);
   const err = validateDeadline(deadline, new Date()); // rule 3
   if (err) back("/tasks", "err", err);
 
-  await prisma.task.create({ data: { subjectId, title, type, deadline } });
+  await prisma.task.create({ data: { subjectId, title, topic, type, deadline } });
   revalidatePath("/tasks");
   back("/tasks", "msg", `"${title}" даалгавар нэмэгдлээ.`);
 }
@@ -72,6 +76,7 @@ export async function completeTaskAction(fd: FormData) {
     if (r.achievementsUnlocked.length) parts.push(`Achievement: ${r.achievementsUnlocked.join(", ")}`);
     if (r.leveledUpTo) parts.push(`LEVEL UP → ${r.leveledUpTo}!`);
     if (r.guildQuestCompleted) parts.push("Guild quest биелсэн! +50 XP");
+    parts.push("Сэдвээрээ AI тест өгч нэмэлт XP аваарай (24 цагийн дотор)");
     text = parts.join(" · ");
   } catch (e) {
     back(returnTo, "err", e instanceof Error ? e.message : "Алдаа гарлаа.");

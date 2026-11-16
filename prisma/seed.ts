@@ -48,6 +48,14 @@ async function main() {
     });
   }
 
+  // AI quiz achievement (rule 22 condition "5/5 AI тест") — also added to existing databases.
+  if ((await prisma.achievement.count({ where: { conditionType: "PERFECT_QUIZ" } })) === 0) {
+    await prisma.achievement.create({
+      data: { name: "Онц сурагч", description: "AI тестээс 5/5 ав", conditionType: "PERFECT_QUIZ", threshold: 1, xpReward: 20 },
+    });
+  }
+  await prisma.setting.upsert({ where: { key: "aiQuizEnabled" }, update: {}, create: { key: "aiQuizEnabled", value: "1" } });
+
   await prisma.user.upsert({
     where: { username: "admin" },
     update: {},

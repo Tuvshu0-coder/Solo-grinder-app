@@ -27,6 +27,7 @@ export const CONDITION_TYPES = {
   TASKS_DONE: "Дуусгасан даалгавар",
   EARLY_TASKS: "Эрт дуусгасан даалгавар",
   LEVEL: "Level",
+  PERFECT_QUIZ: "5/5 авсан AI тест",
 } as const;
 
 export const XP_SOURCES: Record<string, string> = {
@@ -34,6 +35,20 @@ export const XP_SOURCES: Record<string, string> = {
   QUEST: "Daily quest",
   ACHIEVEMENT: "Achievement",
   GUILD_QUEST: "Guild quest",
+  AI_QUIZ: "AI тест",
+};
+
+export const QUIZ_OUTCOMES: Record<string, string> = {
+  CORRECT: "Зөв",
+  WRONG: "Буруу",
+  TIMEOUT: "Хугацаа дууссан",
+  LEFT: "Хуудаснаас гарсан",
+};
+
+export const REPORT_STATUS: Record<string, string> = {
+  PENDING: "Хянагдаж байна",
+  ACCEPTED: "Баталгаажсан — зөвд тооцсон",
+  REJECTED: "Татгалзсан",
 };
 
 export function multiplierLabel(m: number | null | undefined): string {

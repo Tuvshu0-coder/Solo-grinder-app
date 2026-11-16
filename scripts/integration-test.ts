@@ -135,6 +135,95 @@ async function main() {
     ok("leader leaves → oldest member leads; last leaves → guild deleted");
   }
 
+  // 8. AI quiz (rules 23–30) with the offline mock generator.
+  {
+    process.env.AI_QUIZ_MOCK = "1";
+    const quiz = await import("../src/lib/quiz");
+    const { u, s } = await mkUser();
+    const mkDone = async (topic: string) => {
+      const t = await prisma.task.create({
+        data: { subjectId: s.id, title: "q", topic, type: "HOMEWORK", createdAt: ago(2 * DAY), deadline: ahead(5 * DAY) },
+      });
+      await completeTask(u.id, t.id);
+      return t;
+    };
+    const play = async (attemptId: number, correct: number) => {
+      for (let i = 0; i < 5; i++) {
+        const q = await quiz.serveQuestion(u.id, attemptId);
+        assert.equal(q.done, false);
+        if (q.done) return;
+        const right = q.options.indexOf("Зөв хариулт");
+        const choice = i < correct ? right : (right + 1) % 4;
+        await quiz.answerQuestion(u.id, attemptId, q.position, choice);
+      }
+    };
+
+    // Perfect score → +25 XP, PERFECT_QUIZ achievement.
+    const t1 = await mkDone("SQL JOIN");
+    const a1 = await quiz.startQuiz(u.id, t1.id);
+    await assert.rejects(quiz.startQuiz(u.id, t1.id), /аль хэдийн/); // once per task
+    await play(a1, 5);
+    const r1 = await prisma.quizAttempt.findUniqueOrThrow({ where: { id: a1 } });
+    assert.equal(r1.score, 5);
+    assert.equal(r1.xpEarned, 25);
+    const perfect = await prisma.userAchievement.count({ where: { userId: u.id, achievement: { conditionType: "PERFECT_QUIZ" } } });
+    assert.equal(perfect, 1);
+    ok("AI quiz 5/5 → +25 XP and 5/5 achievement");
+
+    // Same subject + topic reuses stored questions (no new GENERATED log).
+    const generated = await prisma.aiLog.count({ where: { kind: "GENERATED" } });
+    const t2 = await mkDone("sql join");
+    const a2 = await quiz.startQuiz(u.id, t2.id);
+    assert.equal(await prisma.aiLog.count({ where: { kind: "GENERATED" } }), generated);
+    await play(a2, 3);
+    const r2 = await prisma.quizAttempt.findUniqueOrThrow({ where: { id: a2 } });
+    assert.equal(r2.xpEarned, 5);
+    ok("same subject/topic reuses questions; 3/5 → +5 XP");
+
+    // Report accepted → answer counted correct, extra XP (3/5 → 4/5 = +10), question never reused.
+    const wrong = await prisma.quizAnswer.findFirstOrThrow({ where: { attemptId: a2, isCorrect: false } });
+    await quiz.reportQuestion(u.id, wrong.id, "Хариулт буруу байна");
+    const rep = await prisma.quizReport.findFirstOrThrow({ where: { answerId: wrong.id } });
+    const { extraXp } = await quiz.reviewReport(rep.id, true);
+    assert.equal(extraXp, 10);
+    assert.equal((await prisma.quizAttempt.findUniqueOrThrow({ where: { id: a2 } })).score, 4);
+    assert.equal((await prisma.quizQuestion.findUniqueOrThrow({ where: { id: wrong.questionId } })).isInvalid, true);
+    ok("accepted report → counted correct, +10 XP, question marked invalid");
+
+    // Timeout: a question answered after 30 s counts as wrong.
+    const t3 = await mkDone("Индекс");
+    const a3 = await quiz.startQuiz(u.id, t3.id);
+    const q = await quiz.serveQuestion(u.id, a3);
+    if (q.done) throw new Error("unexpected");
+    const r = await quiz.answerQuestion(u.id, a3, q.position, 0, new Date(Date.now() + 40_000));
+    assert.equal(r.outcome, "TIMEOUT");
+    // Leaving the page counts the shown question as wrong.
+    await quiz.serveQuestion(u.id, a3);
+    await quiz.abandonQuestion(u.id, a3);
+    const left = await prisma.quizAnswer.findFirstOrThrow({ where: { attemptId: a3, position: 1 } });
+    assert.equal(left.outcome, "LEFT");
+    ok("answer after 30 s → TIMEOUT; leaving page → LEFT");
+
+    // Rule 25: too general topic → no quiz, reason stored on the task.
+    const t4 = await mkDone("бүх зүйл");
+    await assert.rejects(quiz.startQuiz(u.id, t4.id), /ерөнхий/);
+    assert.ok((await prisma.task.findUniqueOrThrow({ where: { id: t4.id } })).quizBlockedReason);
+    ok("too general topic → rejected with reason");
+
+    // Rule 28: max 5 quizzes per day (3 started so far).
+    for (const topic of ["Нэг", "Хоёр"]) await quiz.startQuiz(u.id, (await mkDone(topic)).id);
+    await assert.rejects(quiz.startQuiz(u.id, (await mkDone("Гурав")).id), /5 AI тест/);
+    ok("6th quiz of the day is refused");
+
+    // Admin switch (rule 30).
+    await quiz.setAiEnabled(false);
+    assert.match((await quiz.quizBlockFor(u.id, t4.id)) ?? "", /./);
+    await quiz.setAiEnabled(true);
+    const total = (await prisma.user.findUniqueOrThrow({ where: { id: u.id } })).totalXp;
+    assert.ok((await xpToday(prisma, u.id)) <= 400 && total <= 400);
+    ok("admin can switch AI quiz off; daily cap still holds");
+  }
+
   console.log("\nAll integration checks passed.");
 }
 
