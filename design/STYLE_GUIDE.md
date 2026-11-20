@@ -9,27 +9,24 @@ original; no characters, sprites, art or logos are copied.
 
 ## Palette
 
-**Main palette (team-chosen, in order of use):**
+**Main palette (team-chosen 5 slate tones; token names are historical, values are what count):**
 
 | Token | Hex | Role |
 |---|---|---|
-| `white` | `#ffffff` | **Main** — page background, cards |
-| `mint` | `#f0f9e8` | **Second** — secondary surfaces, slots, bar tracks |
-| `violet` | `#7f7091` | **Third** — primary buttons, active tab, progress, "done" |
-| `ink` | `#413436` | Text and 1px pixel outlines |
-| `gray` | `#a9a4aa` | Disabled, dithering, muted icons |
-| `line` | `#d7d6d6` | Dividers, soft offset shadows, ground shadow |
-| `peach` | `#ebb18c` | Warm accent: store, skin |
+| `white` | `#fcfbfe` | **Main** — page background, cards |
+| `mint` | `#cbd4db` | **Second** — secondary surfaces, slots, bar tracks (also `line`) |
+| `violet` | `#40514e` | **Third** — primary buttons, active menu item, progress, "done" (also `ink-2`) |
+| `ink` | `#060b0c` | Text, 1px pixel outlines, sidebar |
+| `gray` | `#919ca3` | Disabled, dithering, muted icons, sidebar links (also `mint-dark`) |
 
-**Functional helpers (used sparingly):** `ink-2 #6e6468` secondary text · `violet-dark #5e5270`
-button edge · `violet-light #e6e1ec` selected rows · `mint-dark #d5e6cb` inner shade on mint ·
-`peach-dark #c98d6b` peach shade / coin rim · `butter #f2cc6b` coins & warnings · `rose #c9636b`
-late & danger.
+**Functional helpers (used sparingly):** `violet-dark #2c3a37` button edge · `violet-light #e5e9ec`
+selected rows · `peach #ebb18c` / `peach-dark #c98d6b` store, coin rim · `butter #f2cc6b` coins &
+warnings · `rose #c9636b` late & danger.
 
 **Meaning:** violet = interactive / progress / done · rose = late / danger · butter = coins /
 warning · peach = store.
 
-**Ranks:** E gray · D mint · C peach · B violet · A butter · S ink with butter letter.
+**Ranks:** light to dark, then gold: E white · D mint · C gray · B violet · A butter · S ink with butter letter.
 
 ## Character — starter
 
@@ -62,17 +59,19 @@ third-party artist, confirm its license allows use and credit the artist here an
 - **Card:** white, ink outline, 4px soft gray (`line`) offset shadow. **Mint card** for secondary areas.
 - **Dialog box:** double ink frame (handheld text-box style) for messages and the player card.
 - **Title strip:** violet band (or mint with ink underline) inside a card.
-- **Section header:** violet ▶ cursor + title + dashed `line` rule.
+- **Section header:** violet ▶ cursor + title + pellet-row rule (4px gray dots, 12px beat).
 - **Banner:** violet box, white uppercase text.
 - **Place frames:** Store = white with peach diagonal stripes; Guild = white with violet-light stripes.
 - **Buttons:** violet primary · white secondary · peach "buy" · rose danger · disabled gray.
   2px darker bottom edge; pressed moves it to the top.
 - **Inputs:** white, mint inner top shade; focus outline turns violet; pixel arrow on selects.
 - **Badges:** Хийх white · Хоцорсон rose · Дууссан violet · warning butter · tag violet-light.
+- **Segment bars:** unfilled steps are 4px gray pellets, filled steps are notched blocks.
 - **Bars:** level = violet fill with tick marks on a mint track; daily XP / quests = segments,
   butter near the 400 cap.
 - **Slots:** mint with inner shade; selected = violet corner brackets; locked = white with gray outline.
-- **Nav:** white bar with a 2px ink underline; active tab = 6px violet underline; coin count right.
+- **Sidebar:** ink panel with a 4px violet edge; links gray, current page = violet notched row with a white ▶ cursor.
+  A dotted pellet trail (4px violet dots, 16px beat) runs down its inner edge. Below 900px it folds into a top bar with a scrolling menu row.
 
 ## Rules
 
@@ -83,3 +82,15 @@ reference art.
 
 Known limit: pixel-perfect at 100%/200% display scaling; at Windows 125%/150% the font's pixels may
 look slightly uneven (browser limitation).
+
+## App patterns (pages)
+
+- **HUD:** one ink block per page holding its key state (dashboard player stats, achievement count); 6px violet hard shadow.
+- **Dialog:** secondary or destructive actions (edit deadline, delete, rename, leave guild, manage member) open a
+  double-frame text box via the native `popover` API. Each one names its action in the button ("Даалгавар устгах").
+- **Task list:** grouped by urgency (late, within 24h, later, done) with rose / violet / mint heads; the only
+  inline action is "Дууссан".
+- **Achievement ladder:** one per condition; tiers in 60px slots (medal sprite when unlocked, gray lock when not)
+  joined by a pellet trail that turns violet up to the last unlocked tier.
+- **Leaderboard:** placing tiles reuse rank frames (gold, mint, gray, then white); XP bars are relative to the leader.
+- **Buttons** step up 2px on hover and press back on click (off under reduced motion). Danger text is ink, not white.

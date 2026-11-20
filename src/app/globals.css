@@ -22,6 +22,7 @@
   --color-butter: var(--butter);
   --color-butter-dark: var(--butter-dark);
   --color-rose: var(--rose);
+  --color-rose-dark: var(--rose-dark);
 
   /* legacy names, still used by pages that are not hand-restyled yet */
   --color-bg: var(--white);
@@ -91,6 +92,37 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
   .panel-head a { color: var(--white); text-decoration: none; }
   .panel-head.mint { background: var(--mint); color: var(--ink); box-shadow: inset 0 -2px 0 var(--ink); }
   .panel-head.mint a { color: var(--violet-dark); }
+  .panel-head.rose { background: var(--rose); color: var(--ink); } /* ink, not white: white on rose is 3.8:1 */
+
+  /* dark game HUD: the one ink block on a page, holding its key state */
+  .hud { background: var(--ink); color: var(--white); padding: 22px 26px; box-shadow: 6px 6px 0 var(--violet); }
+  .hud .muted { color: var(--gray); }
+
+  /* handheld text-box dialog, opened with the native popover API (top layer, no JS) */
+  .pop {
+    width: min(440px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
+    margin: auto; padding: 14px 18px; background: none; color: var(--ink);
+    border: 8px solid transparent; border-image: var(--frame-dialog) 4 fill / 8px stretch; image-rendering: pixelated;
+  }
+  .pop::backdrop { background: rgb(6 11 12 / 0.55); }
+  .pop-title { margin: 0 0 12px; font-size: 22px; font-weight: normal; color: var(--violet); }
+
+  /* inventory slot that holds a sprite */
+  .slot {
+    display: grid; place-items: center; flex: none; width: 60px; height: 60px;
+    border: 6px solid transparent; border-image: var(--frame-slot) 3 fill / 6px stretch; image-rendering: pixelated;
+  }
+  .slot.locked { border-image-source: var(--frame-slot-locked); }
+
+  /* achievement ladder: tiers joined by a pellet trail, lit up to the last unlocked tier */
+  .ladder { list-style: none; margin: 0; padding: 0; }
+  .ladder > li { position: relative; display: grid; grid-template-columns: 60px minmax(0, 1fr); gap: 0 18px; padding-bottom: 22px; }
+  .ladder > li:last-child { padding-bottom: 0; }
+  .ladder > li:not(:last-child)::before {
+    content: ""; position: absolute; left: 28px; top: 64px; bottom: 4px; width: 4px;
+    background: repeating-linear-gradient(180deg, var(--gray) 0 4px, transparent 4px 12px);
+  }
+  .ladder > li.on:not(:last-child)::before { background: repeating-linear-gradient(180deg, var(--violet) 0 4px, transparent 4px 12px); }
   .card-title { margin: 0 0 8px; color: var(--violet); font-size: 22px; font-weight: normal; }
   .dialog {
     border: 8px solid transparent;
@@ -108,12 +140,15 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
     border-image: var(--frame-btn) 3 fill / 6px stretch;
     image-rendering: pixelated;
   }
+  /* buttons step up on hover and press back down on click, in one whole 2px step */
+  :is(.btn, .btn-sec, .btn-ghost, .btn-buy, .btn-danger):not(:disabled):hover { transform: translateY(-2px); }
+  :is(.btn, .btn-sec, .btn-ghost, .btn-buy, .btn-danger):not(:disabled):active { transform: none; }
   .btn:active { border-image-source: var(--frame-btn-on); }
   .btn-sec, .btn-ghost { border-image-source: var(--frame-btn-sec); color: var(--ink); }
   .btn-sec:active, .btn-ghost:active { border-image-source: var(--frame-btn-sec-on); }
   .btn-buy { border-image-source: var(--frame-btn-buy); color: var(--ink); }
   .btn-buy:active { border-image-source: var(--frame-btn-buy-on); }
-  .btn-danger { border-image-source: var(--frame-btn-danger); color: var(--white); }
+  .btn-danger { border-image-source: var(--frame-btn-danger); color: var(--ink); } /* ink: white on rose is 3.8:1 */
   .btn-danger:active { border-image-source: var(--frame-btn-danger-on); }
   .btn:disabled, .btn-sec:disabled, .btn-ghost:disabled, .btn-buy:disabled, .btn-danger:disabled {
     border-image-source: var(--frame-btn-off); color: var(--gray); cursor: not-allowed;
@@ -139,7 +174,7 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
     border-image: var(--frame-badge) 2 fill / 4px stretch;
     image-rendering: pixelated;
   }
-  .badge-rose { border-image-source: var(--frame-badge-rose); color: var(--white); }
+  .badge-rose { border-image-source: var(--frame-badge-rose); color: var(--ink); }
   .badge-violet { border-image-source: var(--frame-badge-violet); color: var(--white); }
   .badge-butter { border-image-source: var(--frame-badge-butter); color: var(--ink); }
   .badge-mint { border-image-source: var(--frame-badge-mint); color: var(--ink); }
@@ -165,7 +200,8 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
   .track.butter > i { background: var(--butter) repeating-linear-gradient(90deg, transparent 0 22px, var(--peach-dark) 22px 24px); }
   .seg { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; }
   .seg > b { width: 14px; min-width: 6px; flex: 0 1 auto; height: 18px; background: var(--violet); clip-path: var(--notch-1); }
-  .seg > b.off { height: 4px; background: var(--line); clip-path: none; }
+  /* unfilled steps are pellets waiting to be eaten */
+  .seg > b.off { height: 18px; background: linear-gradient(var(--gray), var(--gray)) center / 4px 4px no-repeat; clip-path: none; }
   .seg.butter > b:not(.off) { background: var(--butter); box-shadow: inset 0 -4px 0 var(--peach-dark); }
 
   /* ---------- tables ---------- */
@@ -176,17 +212,33 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
 
   /* ---------- headings ---------- */
   .section-title { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 33px; line-height: 44px; font-weight: normal; }
-  .rule { height: 2px; margin: 4px 0 18px; background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 10px); }
+  .rule { height: 4px; margin: 4px 0 18px; background: repeating-linear-gradient(90deg, var(--gray) 0 4px, transparent 4px 12px); }
   .muted { color: var(--ink-2); }
 
-  /* ---------- nav ---------- */
-  .nav { position: relative; z-index: 2; background: var(--white); box-shadow: 0 2px 0 var(--ink); }
-  .nav-inner { max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; padding: 0 16px; }
-  .brand { padding: 8px 12px 8px 0; color: var(--ink); text-decoration: none; white-space: nowrap; }
-  .brand b { color: var(--violet); font-weight: normal; }
-  .tab { padding: 8px 10px; color: var(--ink-2); text-decoration: none; white-space: nowrap; }
-  .tab:hover { color: var(--ink); }
-  .tab.on { color: var(--ink); box-shadow: inset 0 -6px 0 var(--violet); }
+  /* ---------- shell & sidebar (a game menu screen: ink panel, ▶ cursor on the current page) ---------- */
+  .shell { display: grid; grid-template-columns: 264px minmax(0, 1fr); min-height: 100vh; }
+  .side {
+    position: sticky; top: 0; z-index: 2; height: 100vh; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 22px; padding: 22px 16px;
+    background: var(--ink); color: var(--white);
+  }
+  /* pellet trail down the inner edge, the one arcade flourish (4px dots on a 16px beat) */
+  .side::after {
+    content: ""; position: absolute; top: 0; bottom: 0; right: 6px; width: 4px; pointer-events: none;
+    background: repeating-linear-gradient(180deg, var(--violet) 0 4px, transparent 4px 16px);
+  }
+  .side :focus-visible { outline-color: var(--white); }
+  .side .tab:focus-visible { outline-offset: -4px; } /* the notch clip-path would cut an outside outline */
+  .brand { color: var(--white); text-decoration: none; white-space: nowrap; font-size: 33px; line-height: 44px; }
+  .brand b { display: block; color: var(--gray); font-weight: normal; }
+  .side-nav { display: flex; flex-direction: column; gap: 4px; }
+  .tab { display: flex; align-items: center; gap: 10px; padding: 6px 10px; color: var(--gray); text-decoration: none; white-space: nowrap; }
+  .tab .sprite { visibility: hidden; }
+  .tab:hover { color: var(--white); }
+  .tab.on { color: var(--white); background: var(--violet); clip-path: var(--notch-1); }
+  .tab.on .sprite { visibility: visible; }
+  .side-foot { margin-top: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .side-sub { display: block; color: var(--gray); }
 
   /* ---------- dashboard helpers ---------- */
   .dash-sep { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px) left top / 100% 2px no-repeat; }
@@ -199,8 +251,20 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
 
 @media (prefers-reduced-motion: reduce) {
   .hero > .hero-sprite { animation: none; }
+  :is(.btn, .btn-sec, .btn-ghost, .btn-buy, .btn-danger):hover { transform: none !important; }
 }
 @media (max-width: 700px) {
   .dash-days span:nth-child(even) { visibility: hidden; }
-  .nav-inner > nav { order: 3; width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+}
+/* narrow screens: the sidebar folds into a top bar with a scrolling menu row */
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { position: relative; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 16px 18px; }
+  .side::after { top: auto; left: 0; right: 0; bottom: 6px; width: auto; height: 4px; background: repeating-linear-gradient(90deg, var(--violet) 0 4px, transparent 4px 16px); }
+  .brand { font-size: 22px; line-height: 33px; }
+  .brand b { display: inline; }
+  .side-foot { margin: 0 0 0 auto; flex-direction: row; align-items: center; gap: 12px; }
+  .side-sub { display: inline; margin-left: 8px; }
+  .side-nav { order: 3; width: 100%; flex-direction: row; flex-wrap: wrap; }
+  .tab:not(.on) .sprite { display: none; }
 }

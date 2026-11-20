@@ -17,6 +17,25 @@ sg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sg)
 C = dict(sg.C)
 C["butter-dark"] = "#8a6417"   # warning *text* on white (butter itself is too light to read)
+C["rose-dark"] = "#9e3f47"     # late/danger *text* on white (rose itself is 3.8:1, under AA)
+
+# 11x12 achievement medal (original): slate ribbon, gold disc lit from top-left like the coin
+MEDAL = [
+    "ooo.....ooo",
+    "ovo.....ovo",
+    ".ovo...ovo.",
+    "..ovo.ovo..",
+    "...ooooo...",
+    "..ogggggo..",
+    ".ogwwggggo.",
+    ".ogwggggso.",
+    ".ogggggsso.",
+    ".oggggssso.",
+    "..ogsssso..",
+    "...ooooo...",
+]
+assert all(len(r) == 11 for r in MEDAL) and len(MEDAL) == 12
+MEDAL_PAL = {"o": C["ink"], "v": C["violet"], "g": C["butter"], "s": C["peach-dark"], "w": C["white"]}
 
 # small 9x10 flame for the streak (original)
 FLAME = [
@@ -109,6 +128,8 @@ def ts():
         f"export const FLAME_PALETTE: Palette = {json.dumps(FLAME_PAL)};\n\n",
         sprite("ICON_LOCK", LOCK, 7, 8),
         f"export const LOCK_PALETTE: Palette = {json.dumps({'o': C['ink'], 'y': C['butter']})};\n\n",
+        sprite("ICON_MEDAL", MEDAL, 11, 12),
+        f"export const MEDAL_PALETTE: Palette = {json.dumps(MEDAL_PAL)};\n\n",
         f"export const RANK_STYLE: Record<string, {{ fill: string; text: string }}> = "
         f"{json.dumps({r: {'fill': f, 'text': t} for r, f, t in sg.RANKS}, indent=2)};\n",
     ]

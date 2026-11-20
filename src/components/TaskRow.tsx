@@ -9,7 +9,7 @@ export function timeLeft(deadline: Date, now = new Date()): { text: string; tone
   const d = Math.floor(abs / (24 * HOUR));
   const h = Math.floor((abs % (24 * HOUR)) / HOUR);
   const span = d > 0 ? `${d} хоног ${h} цаг` : `${h} цаг`;
-  if (ms < 0) return { text: `${span} хоцорсон`, tone: "text-rose" };
+  if (ms < 0) return { text: `${span} хоцорсон`, tone: "text-rose-dark" };
   if (ms < 24 * HOUR) return { text: `${span} үлдсэн`, tone: "text-butter-dark" };
   return { text: `${span} үлдсэн`, tone: "muted" };
 }
@@ -53,11 +53,10 @@ export function TaskSummary({
   return (
     <div className="min-w-0">
       <div className="truncate">{task.title}</div>
+      <div className="muted truncate">{task.subject.name} / {TASK_TYPES[task.type as TaskType] ?? task.type}</div>
       <div className="flex flex-wrap gap-x-4">
-        <span className="muted">{task.subject.name}</span>
-        <span className="muted">{TASK_TYPES[task.type as TaskType] ?? task.type}</span>
-        <span className="muted">{fmt(task.deadline)}</span>
         {task.status !== "DONE" && <span className={left.tone}>{left.text}</span>}
+        <span className="muted">{fmt(task.deadline)}</span>
       </div>
     </div>
   );

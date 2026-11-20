@@ -2,7 +2,7 @@
 import type { CSSProperties } from "react";
 import {
   COIN, COIN_PALETTE, COLORS, FLAME_PALETTE, HERO, HERO_HAIRS, HERO_OUTFIT, HERO_SHADOW, HERO_SHADOW_TOP, HERO_SKINS,
-  ICON_CHECK, ICON_CURSOR, ICON_FLAME, ICON_LOCK, LOCK_PALETTE, RANK_STYLE,
+  ICON_CHECK, ICON_CURSOR, ICON_FLAME, ICON_LOCK, ICON_MEDAL, LOCK_PALETTE, MEDAL_PALETTE, RANK_STYLE,
   type Palette, type SpriteData,
 } from "@/lib/sprites";
 
@@ -68,9 +68,10 @@ export function Coin({ scale = 2 }: { scale?: number }) {
   return <Sprite data={COIN} palette={COIN_PALETTE} scale={scale} title="зоос" />;
 }
 
-export function Icon({ name, scale = 3, color }: { name: "check" | "cursor" | "flame" | "lock"; scale?: number; color?: string }) {
+export function Icon({ name, scale = 3, color }: { name: "check" | "cursor" | "flame" | "lock" | "medal"; scale?: number; color?: string }) {
   if (name === "flame") return <Sprite data={ICON_FLAME} palette={FLAME_PALETTE} scale={scale} />;
-  if (name === "lock") return <Sprite data={ICON_LOCK} palette={LOCK_PALETTE} scale={scale} />;
+  if (name === "medal") return <Sprite data={ICON_MEDAL} palette={MEDAL_PALETTE} scale={scale} />;
+  if (name === "lock") return <Sprite data={ICON_LOCK} palette={color ? { ...LOCK_PALETTE, y: color } : LOCK_PALETTE} scale={scale} />;
   const data = name === "check" ? ICON_CHECK : ICON_CURSOR;
   return <Sprite data={data} palette={{ "#": color ?? (name === "check" ? COLORS.white : COLORS.violet) }} scale={scale} />;
 }

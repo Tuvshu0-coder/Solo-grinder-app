@@ -6,7 +6,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const user = await requireUser();
   if (user.role === "ADMIN") redirect("/admin");
   return (
-    <>
+    <div className="shell">
       <Nav
         username={user.username}
         subtitle={`Lv.${user.levelId} · ${user.level.rank}`}
@@ -18,7 +18,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
           { href: "/guild", label: "Guild" },
         ]}
       />
-      <main className="mx-auto max-w-[1240px] px-4 pt-8 pb-16">{children}</main>
-    </>
+      <main className="mx-auto w-full max-w-[1240px] min-w-0 px-4 pt-8 pb-16 md:px-8">{children}</main>
+    </div>
   );
 }

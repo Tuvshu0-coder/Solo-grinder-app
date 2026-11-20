@@ -18,6 +18,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      ".agents/**", // installed third-party skills, not app code
+      ".claude/**",
     ],
   },
 ];

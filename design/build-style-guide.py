@@ -10,20 +10,21 @@ ROOT = pathlib.Path(__file__).resolve().parent
 FONT = ROOT / "fonts" / "DepartureMono-Regular.woff2"
 
 # ---------------------------------------------------------------- palette
-# Main palette chosen by the team (weight: white > mint > violet), plus a few functional colors.
+# Main palette: 5 slate tones chosen by the team (#060b0c #40514e #919ca3 #cbd4db #fcfbfe), plus a few functional colors.
+# Token names are historical (violet = primary slate green, mint = light slate); the values are what count.
 UI = [
-    ("white", "#ffffff", "MAIN — page background, cards"),
-    ("mint", "#f0f9e8", "SECOND — secondary surfaces, slots, tracks"),
-    ("violet", "#7f7091", "THIRD — primary buttons, active, progress, done"),
-    ("ink", "#413436", "Text and pixel outlines"),
-    ("gray", "#a9a4aa", "Disabled, dithering, muted icons"),
-    ("line", "#d7d6d6", "Dividers, card shadows, ground shadow"),
+    ("white", "#fcfbfe", "MAIN — page background, cards"),
+    ("mint", "#cbd4db", "SECOND — secondary surfaces, slots, tracks"),
+    ("violet", "#40514e", "THIRD — primary buttons, active, progress, done"),
+    ("ink", "#060b0c", "Text, pixel outlines, sidebar"),
+    ("gray", "#919ca3", "Disabled, dithering, muted icons, sidebar links"),
+    ("line", "#cbd4db", "Dividers, card shadows, ground shadow"),
     ("peach", "#ebb18c", "Warm accent: store, skin"),
     # functional additions (kept few)
-    ("ink-2", "#6e6468", "Secondary text (readable on white)"),
-    ("violet-dark", "#5e5270", "Button edge, pressed, trousers shade"),
-    ("violet-light", "#e6e1ec", "Selected rows, hover, active chips"),
-    ("mint-dark", "#d5e6cb", "Inner shade on mint (slots, inputs)"),
+    ("ink-2", "#40514e", "Secondary text (readable on white)"),
+    ("violet-dark", "#2c3a37", "Button edge, pressed, trousers shade"),
+    ("violet-light", "#e5e9ec", "Selected rows, hover, active chips"),
+    ("mint-dark", "#919ca3", "Inner shade on mint (slots, inputs)"),
     ("peach-dark", "#c98d6b", "Peach shading, coin rim, skin shade"),
     ("butter", "#f2cc6b", "Coins, warnings (cap, <24h)"),
     ("rose", "#c9636b", "Late, danger, errors"),
@@ -34,7 +35,8 @@ C = {k: v for k, v, _ in UI}
 SKINS = [("#f8dcca", "#deb2a0"), ("#eab38e", "#c98d6b"), ("#b97a55", "#8a5638"), ("#6e4630", "#4a2e20")]
 HAIRS = [("#422e22", "#6e503a"), ("#1f1a1e", "#3d3640"), ("#c9963f", "#e8c46a"), ("#9a97a3", "#c9c6cc")]   # base, highlight: brown (original), black, blonde, silver
 HAIR_NAMES = ["brown", "black", "blonde", "silver"]
-RANKS = [("E", C["gray"], C["ink"]), ("D", C["mint"], C["ink"]), ("C", C["peach"], C["ink"]),
+# light -> dark slate ladder, then gold
+RANKS = [("E", C["white"], C["ink"]), ("D", C["mint"], C["ink"]), ("C", C["gray"], C["ink"]),
          ("B", C["violet"], C["white"]), ("A", C["butter"], C["ink"]), ("S", C["ink"], C["butter"])]
 
 
@@ -115,7 +117,7 @@ def stripes(base, line, period=8):
     return uri(runs_svg(grid, {"l": line, "b": base}, period, period)), period * 2
 
 
-DOTS = uri(runs_svg(["d" + "." * 11] + ["." * 12] * 11, {"d": C["mint-dark"]}, 12, 12))
+DOTS = uri(runs_svg(["d" + "." * 11] + ["." * 12] * 11, {"d": C["line"]}, 12, 12))
 CURSOR = ["#...", "##..", "###.", "####", "###.", "##..", "#..."]
 
 

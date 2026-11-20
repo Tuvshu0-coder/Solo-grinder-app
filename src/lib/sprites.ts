@@ -3,21 +3,22 @@ export type SpriteData = { w: number; h: number; rows: string[] };
 export type Palette = Record<string, string>;
 
 export const COLORS = {
-  "white": "#ffffff",
-  "mint": "#f0f9e8",
-  "violet": "#7f7091",
-  "ink": "#413436",
-  "gray": "#a9a4aa",
-  "line": "#d7d6d6",
+  "white": "#fcfbfe",
+  "mint": "#cbd4db",
+  "violet": "#40514e",
+  "ink": "#060b0c",
+  "gray": "#919ca3",
+  "line": "#cbd4db",
   "peach": "#ebb18c",
-  "ink-2": "#6e6468",
-  "violet-dark": "#5e5270",
-  "violet-light": "#e6e1ec",
-  "mint-dark": "#d5e6cb",
+  "ink-2": "#40514e",
+  "violet-dark": "#2c3a37",
+  "violet-light": "#e5e9ec",
+  "mint-dark": "#919ca3",
   "peach-dark": "#c98d6b",
   "butter": "#f2cc6b",
   "rose": "#c9636b",
-  "butter-dark": "#8a6417"
+  "butter-dark": "#8a6417",
+  "rose-dark": "#9e3f47"
 } as const;
 
 export const HERO: SpriteData = { w: 52, h: 92, rows: [
@@ -154,7 +155,7 @@ export const COIN: SpriteData = { w: 12, h: 12, rows: [
   "..ooggssoo..",
   "....oooo...."
 ] };
-export const COIN_PALETTE: Palette = {"o": "#413436", "g": "#f2cc6b", "s": "#c98d6b", "w": "#ffffff"};
+export const COIN_PALETTE: Palette = {"o": "#060b0c", "g": "#f2cc6b", "s": "#c98d6b", "w": "#fcfbfe"};
 
 export const ICON_CHECK: SpriteData = { w: 7, h: 6, rows: [
   "......#",
@@ -185,7 +186,7 @@ export const ICON_FLAME: SpriteData = { w: 9, h: 10, rows: [
   ".oryyyro.",
   "..ooooo.."
 ] };
-export const FLAME_PALETTE: Palette = {"o": "#413436", "r": "#c9636b", "y": "#f2cc6b", "w": "#ffffff"};
+export const FLAME_PALETTE: Palette = {"o": "#060b0c", "r": "#c9636b", "y": "#f2cc6b", "w": "#fcfbfe"};
 
 export const ICON_LOCK: SpriteData = { w: 7, h: 8, rows: [
   "..ooo..",
@@ -197,31 +198,47 @@ export const ICON_LOCK: SpriteData = { w: 7, h: 8, rows: [
   "oyyoyyo",
   "ooooooo"
 ] };
-export const LOCK_PALETTE: Palette = {"o": "#413436", "y": "#f2cc6b"};
+export const LOCK_PALETTE: Palette = {"o": "#060b0c", "y": "#f2cc6b"};
+
+export const ICON_MEDAL: SpriteData = { w: 11, h: 12, rows: [
+  "ooo.....ooo",
+  "ovo.....ovo",
+  ".ovo...ovo.",
+  "..ovo.ovo..",
+  "...ooooo...",
+  "..ogggggo..",
+  ".ogwwggggo.",
+  ".ogwggggso.",
+  ".ogggggsso.",
+  ".oggggssso.",
+  "..ogsssso..",
+  "...ooooo..."
+] };
+export const MEDAL_PALETTE: Palette = {"o": "#060b0c", "v": "#40514e", "g": "#f2cc6b", "s": "#c98d6b", "w": "#fcfbfe"};
 
 export const RANK_STYLE: Record<string, { fill: string; text: string }> = {
   "E": {
-    "fill": "#a9a4aa",
-    "text": "#413436"
+    "fill": "#fcfbfe",
+    "text": "#060b0c"
   },
   "D": {
-    "fill": "#f0f9e8",
-    "text": "#413436"
+    "fill": "#cbd4db",
+    "text": "#060b0c"
   },
   "C": {
-    "fill": "#ebb18c",
-    "text": "#413436"
+    "fill": "#919ca3",
+    "text": "#060b0c"
   },
   "B": {
-    "fill": "#7f7091",
-    "text": "#ffffff"
+    "fill": "#40514e",
+    "text": "#fcfbfe"
   },
   "A": {
     "fill": "#f2cc6b",
-    "text": "#413436"
+    "text": "#060b0c"
   },
   "S": {
-    "fill": "#413436",
+    "fill": "#060b0c",
     "text": "#f2cc6b"
   }
 };

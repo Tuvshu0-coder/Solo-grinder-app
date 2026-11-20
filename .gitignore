@@ -43,3 +43,8 @@ next-env.d.ts
 # sqlite databases
 prisma/*.db
 prisma/*.db-journal
+
+# installed AI skills (reinstall with: npx skills add ...)
+/.agents/
+/.claude/skills/
+/skills-lock.json

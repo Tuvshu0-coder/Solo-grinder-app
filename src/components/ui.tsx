@@ -26,23 +26,37 @@ export async function Flash({ searchParams }: { searchParams: SP }) {
 
 export function Nav({ links, username, subtitle }: { links: { href: string; label: string }[]; username: string; subtitle?: string }) {
   return (
-    <header className="nav">
-      <div className="nav-inner">
-        <Link href={links[0].href} className="brand">
-          <b>SOLO</b> GRINDING
-        </Link>
-        <NavLinks links={links} />
-        <div className="ml-auto flex items-center gap-3 py-1">
-          <span className="muted">
-            {username}
-            {subtitle && <span> · {subtitle}</span>}
-          </span>
-          <form action={logout}>
-            <button className="btn-sec">Гарах</button>
-          </form>
-        </div>
+    <aside className="side">
+      <Link href={links[0].href} className="brand">
+        <b>SOLO</b> GRINDING
+      </Link>
+      <NavLinks links={links} />
+      <div className="side-foot">
+        <span>
+          {username}
+          {subtitle && <span className="side-sub">{subtitle}</span>}
+        </span>
+        <form action={logout}>
+          <button className="btn-sec">Гарах</button>
+        </form>
       </div>
-    </header>
+    </aside>
+  );
+}
+
+/** Trigger button + handheld text-box dialog on the native popover API (top layer, Esc/outside closes, no JS). */
+export function Dialog({ id, label, title, btn = "btn-ghost", children }: {
+  id: string; label: React.ReactNode; title: string; btn?: string; children: React.ReactNode;
+}) {
+  return (
+    <>
+      <button type="button" className={btn} popoverTarget={id}>{label}</button>
+      <div id={id} popover="auto" className="pop" role="dialog" aria-labelledby={`${id}-t`}>
+        <h2 id={`${id}-t`} className="pop-title">{title}</h2>
+        <div className="grid gap-5">{children}</div>
+        <button type="button" className="btn-sec mt-5" popoverTarget={id} popoverTargetAction="hide">Болих</button>
+      </div>
+    </>
   );
 }
 
