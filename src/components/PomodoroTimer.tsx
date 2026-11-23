@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Hero } from "./pixel";
+import type { Avatar } from "@/lib/avatar";
 
 type Mode = "focus" | "break";
 
@@ -43,7 +44,7 @@ function playLofiChord(context: AudioContext, output: GainNode, chordIndex: numb
   });
 }
 
-export default function PomodoroTimer() {
+export default function PomodoroTimer({ avatar }: { avatar?: Avatar }) {
   const [mode, setMode] = useState<Mode>("focus");
   const [focusMinutes, setFocusMinutes] = useState("25");
   const [breakMinutes, setBreakMinutes] = useState("5");
@@ -275,9 +276,9 @@ export default function PomodoroTimer() {
             <span className="absolute -bottom-4 left-1/2 h-4 w-8 -translate-x-1/2 bg-[var(--ink)]" />
           </div>
           <div className="absolute bottom-[90px] left-1/2 z-0 h-3 w-28 -translate-x-1/2 border-2 border-[var(--ink)] bg-[var(--violet-dark)]" />
-          <div className="absolute left-1/2 top-[70px] -translate-x-1/2 sm:top-[90px]">
-            <div className="absolute -z-10 left-1/2 top-14 h-28 w-32 -translate-x-1/2 border-x-[10px] border-t-[10px] border-[var(--violet-dark)] bg-[var(--violet)]" />
-            <Hero scale={2} bob={running} />
+          <div className="absolute left-1/2 top-[54px] -translate-x-1/2 sm:top-[74px]">
+            <div className="absolute -z-10 left-1/2 top-[72px] h-28 w-32 -translate-x-1/2 border-x-[10px] border-t-[10px] border-[var(--violet-dark)] bg-[var(--violet)]" />
+            <Hero avatar={avatar} scale={2} bob={running} />
           </div>
           <div className="absolute inset-x-0 bottom-0 h-[88px] border-t-8 border-[var(--ink)] bg-[var(--peach)]">
             <div className="absolute left-[calc(50%-62px)] top-3 flex items-center">

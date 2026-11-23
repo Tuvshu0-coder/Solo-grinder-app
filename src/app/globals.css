@@ -286,6 +286,22 @@ svg.sprite { display: inline-block; vertical-align: middle; image-rendering: pix
   .hero { position: relative; display: inline-block; flex: none; }
   .hero > .hero-shadow { position: absolute; left: 0; }
   .hero > .hero-sprite { position: relative; animation: hero-bob 1.2s steps(1) infinite; }
+
+  /* ---------- character creator ---------- */
+  .stage {
+    display: grid; place-items: center; padding: 14px 0 8px;
+    background: var(--violet-light); box-shadow: inset 0 -12px 0 var(--mint), inset 0 0 0 2px var(--ink);
+  }
+  .pick {
+    display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 6px 4px;
+    font: inherit; line-height: 29px; color: var(--ink); background: none; cursor: pointer;
+    border: 6px solid transparent; border-image: var(--frame-panel) 3 fill / 6px stretch; image-rendering: pixelated;
+  }
+  .pick:hover { border-image-source: var(--frame-panel-vl); }
+  .pick.on { border-image-source: var(--frame-panel-vl); outline: 4px solid var(--violet); outline-offset: 2px; }
+  .pick-art { display: grid; place-items: end center; height: 112px; }
+  .swatch { width: 40px; height: 40px; padding: 0; border: 0; cursor: pointer; box-shadow: inset 0 0 0 3px var(--ink); }
+  .swatch.on { outline: 4px solid var(--violet); outline-offset: 3px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

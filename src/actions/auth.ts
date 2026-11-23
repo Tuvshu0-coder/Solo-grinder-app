@@ -28,7 +28,7 @@ export async function register(fd: FormData) {
     data: { username, password: await bcrypt.hash(password, 10) },
   });
   await createSession(user.id);
-  redirect("/subjects?msg=" + encodeURIComponent("Welcome! Start by adding your subjects."));
+  redirect("/welcome");
 }
 
 export async function logout() {

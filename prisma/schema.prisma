@@ -29,6 +29,8 @@ model User {
   guildLeftAt    DateTime? // 7-day guild cooldown
   isSuspended    Boolean   @default(false)
   createdAt      DateTime  @default(now())
+  avatar         String? // character look as JSON (src/lib/avatar.ts); null = not created yet
+  coins          Int       @default(0) // earned 1:1 with granted XP, spent in the character shop
 
   subjects     Subject[]
   xpLogs       XpLog[]
@@ -36,6 +38,17 @@ model User {
   achievements UserAchievement[]
   guildMember  GuildMember?
   sessions     Session[]
+  ownedItems   OwnedItem[]
+}
+
+// Character shop purchases. itemId = "<category>/<key>" from src/lib/avatar.ts (free items aren't stored).
+model OwnedItem {
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemId   String
+  boughtAt DateTime @default(now())
+
+  @@id([userId, itemId])
 }
 
 model Session {

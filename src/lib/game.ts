@@ -33,7 +33,8 @@ export async function grantXp(
   const granted = capXp(amount, await xpToday(tx, userId, now));
   await tx.xpLog.create({ data: { userId, source, sourceId, xpAmount: granted, createdAt: now } });
   if (granted > 0) {
-    await tx.user.update({ where: { id: userId }, data: { totalXp: { increment: granted } } });
+    // coins (character shop currency) are earned 1:1 with granted XP
+    await tx.user.update({ where: { id: userId }, data: { totalXp: { increment: granted }, coins: { increment: granted } } });
   }
   return granted;
 }

@@ -6,9 +6,10 @@ import { DAILY_XP_CAP } from "@/lib/rules";
 import { XP_SOURCES } from "@/lib/labels";
 import { addDays, dayKey, dayStart, fmt } from "@/lib/time";
 import { Flash, type SP } from "@/components/ui";
-import { Bar, Hero, Icon, RankBadge, Seg } from "@/components/pixel";
+import { Bar, Coin, Hero, Icon, RankBadge, Seg } from "@/components/pixel";
 import { CompleteButton, TaskSummary } from "@/components/TaskRow";
 import { COLORS } from "@/lib/sprites";
+import { normalizeAvatar } from "@/lib/avatar";
 
 const CHART_H = 160; // px, multiple of 4 so bar heights land on whole art pixels
 
@@ -55,18 +56,19 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
       {/* ---------- player HUD: the one dark block on the page ---------- */}
       <section className="hud mb-10 grid grid-cols-1 items-end gap-x-10 gap-y-5 sm:grid-cols-[auto_minmax(0,1fr)]" aria-label="Player">
         <div className="justify-self-center sm:justify-self-start">
-          <Hero scale={2} />
+          <Hero avatar={normalizeAvatar(user.avatar)} scale={2} />
         </div>
         <div className="min-w-0">
           <div className="flex flex-wrap items-baseline justify-between gap-x-6">
             <h1 className="m-0 truncate text-3xl font-normal">{user.username}</h1>
             <span className="muted">Player No.{String(user.id).padStart(3, "0")}</span>
           </div>
-          <dl className="mt-4 mb-5 grid grid-cols-2 gap-x-8 gap-y-3 md:grid-cols-4">
+          <dl className="mt-4 mb-5 grid grid-cols-2 gap-x-8 gap-y-3 md:grid-cols-5">
             <HudStat label="Level" value={user.levelId} />
             <HudStat label="Rank" value={<RankBadge rank={user.level.rank} />} />
             <HudStat label="Total XP" value={user.totalXp.toLocaleString()} />
             <HudStat label="Streak" value={<span className="flex items-center gap-3"><Icon name="flame" scale={3} />{user.streak} days</span>} />
+            <HudStat label="Coins" value={<Link href="/character" className="flex items-center gap-3 text-[var(--white)] no-underline"><Coin scale={2} />{user.coins.toLocaleString()}</Link>} />
           </dl>
           <div className="flex flex-wrap justify-between gap-x-4">
             <span>Level {user.levelId} → {nextLevel ? nextLevel.id : "MAX"}</span>
