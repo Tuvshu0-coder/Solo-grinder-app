@@ -1,6 +1,7 @@
 # Solo Grinding
 
 Turns your coursework into a game — Next.js 15 + Prisma + SQLite.
+A Java version (Servlets + JSP + JDBC, same database) is in [`java/`](java/README.md).
 Implements the requirements in `../section8_revised_mn.txt` (rules 1–22).
 
 ## Run

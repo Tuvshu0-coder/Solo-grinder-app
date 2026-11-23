@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Lets JSP pages call the static helpers in web.Fn as ${sg:icon('cursor', 3, '')} and so on. -->
+<taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_3_0.xsd"
+        version="3.0">
+    <tlib-version>1.0</tlib-version>
+    <short-name>sg</short-name>
+    <uri>/solo-grinding</uri>
+
+    <function><name>icon</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String icon(java.lang.String, int, java.lang.String)</function-signature></function>
+    <function><name>hero</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String hero(int, boolean)</function-signature></function>
+    <function><name>seg</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String seg(int, int, int, java.lang.String)</function-signature></function>
+    <function><name>bar</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String bar(int, int)</function-signature></function>
+    <function><name>rank</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String rank(java.lang.String, boolean)</function-signature></function>
+    <function><name>fmt</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String fmt(java.time.Instant)</function-signature></function>
+    <function><name>day</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String day(java.time.Instant)</function-signature></function>
+    <function><name>monthDay</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String monthDay(java.time.Instant)</function-signature></function>
+    <function><name>localInput</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String localInput(java.time.Instant)</function-signature></function>
+    <function><name>num</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String num(long)</function-signature></function>
+    <function><name>pad3</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String pad3(int)</function-signature></function>
+    <function><name>min</name><function-class>web.Fn</function-class>
+        <function-signature>int min(int, int)</function-signature></function>
+    <function><name>multiplier</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String multiplier(java.lang.Double)</function-signature></function>
+    <function><name>timeLeft</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String timeLeft(model.Task)</function-signature></function>
+    <function><name>timeTone</name><function-class>web.Fn</function-class>
+        <function-signature>java.lang.String timeTone(model.Task)</function-signature></function>
+</taglib>

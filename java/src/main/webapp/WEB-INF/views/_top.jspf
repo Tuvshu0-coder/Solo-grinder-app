@@ -1,0 +1,37 @@
+<%-- Page frame for logged-in pages: sidebar menu + the opening of <main>. Closed by _bottom.jspf.
+     ${view} (set by BaseServlet.render) says which menu item is the current page. --%>
+<%@ include file="/WEB-INF/views/_head.jspf" %>
+<body class="min-h-screen">
+<div class="shell">
+  <aside class="side">
+    <a href="${ctx}${user.admin ? '/admin' : '/'}" class="brand"><b>SOLO</b> GRINDING</a>
+    <nav class="side-nav">
+      <c:choose>
+        <c:when test="${user.admin}">
+          <ui:navlink href="/admin" label="Stats" on="${view == 'admin/stats'}" />
+          <ui:navlink href="/admin/users" label="Users" on="${view == 'admin/users'}" />
+          <ui:navlink href="/admin/quests" label="Quest templates" on="${view == 'admin/quests'}" />
+          <ui:navlink href="/admin/achievements" label="Achievement" on="${view == 'admin/achievements'}" />
+          <ui:navlink href="/admin/levels" label="Level" on="${view == 'admin/levels'}" />
+        </c:when>
+        <c:otherwise>
+          <ui:navlink href="/" label="Dashboard" on="${view == 'dashboard'}" />
+          <ui:navlink href="/tasks" label="Tasks" on="${view == 'tasks'}" />
+          <ui:navlink href="/pomodoro" label="Pomodoro" on="${view == 'pomodoro'}" />
+          <ui:navlink href="/subjects" label="Subjects" on="${view == 'subjects'}" />
+          <ui:navlink href="/achievements" label="Achievement" on="${view == 'achievements'}" />
+          <ui:navlink href="/guild" label="Guild" on="${view == 'guild'}" />
+        </c:otherwise>
+      </c:choose>
+    </nav>
+    <div class="side-foot">
+      <span>
+        <c:out value="${user.username}" />
+        <span class="side-sub">${user.admin ? 'Admin' : 'Lv.' += user.levelId += ' · ' += user.rank}</span>
+      </span>
+      <form method="post" action="${ctx}/logout">
+        <button class="btn-sec">Log out</button>
+      </form>
+    </div>
+  </aside>
+  <main class="mx-auto w-full max-w-[1240px] min-w-0 px-4 pt-8 pb-16 md:px-8">

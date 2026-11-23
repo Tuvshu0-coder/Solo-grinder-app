@@ -1,0 +1,21 @@
+/* Stylesheet source for the Java version. It reuses the site's stylesheet (pixel frames, palette,
+   components) and adds the two fonts. Tailwind scans the JSP/JS files for the classes they use and
+   writes plain CSS to src/main/webapp/css/app.css (committed, so running the app needs no Node).
+   Rebuild after changing classes in a JSP:   npm run css:java   (from the repository root) */
+@import "../../src/app/globals.css";
+@source "../src/main/webapp";
+
+@font-face {
+  font-family: "Milker"; /* Brandsemut, personal use only: see webapp/fonts/Milker-LICENSE.txt */
+  src: url("/fonts/Milker.otf") format("opentype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Departure Mono"; /* SIL Open Font License: see webapp/fonts/DepartureMono-OFL.txt */
+  src: url("/fonts/DepartureMono-Regular.woff2") format("woff2");
+  font-display: block;
+}
+:root {
+  --font-logo: "Milker";
+  --font-pixel: "Departure Mono";
+}

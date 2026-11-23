@@ -1,0 +1,19 @@
+<%-- Shared top of every page: page settings, tag libraries and <head>. Included first by every view.
+     c:  = JSTL core (<c:if>, <c:forEach>, <c:out> which HTML-escapes user text)
+     sg: = our helpers in web.Fn (icons, progress bars, dates)
+     ui: = our tag files in WEB-INF/tags (page title, message box, dialog ...) --%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="sg" uri="/WEB-INF/sg.tld" %>
+<%@ taglib prefix="ui" tagdir="/WEB-INF/tags" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solo Grinding</title>
+<meta name="description" content="Turn your coursework into a game">
+<link rel="icon" href="${ctx}/favicon.ico">
+<link rel="stylesheet" href="${ctx}/css/app.css">
+</head>
