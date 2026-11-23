@@ -15,6 +15,7 @@ from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parent
 OUT = ROOT.parent / "public" / "scene"
+JAVA_OUT = ROOT.parent / "java" / "src" / "main" / "webapp" / "scene"
 
 # the app's own palette tokens, from the same source as the style guide
 spec = importlib.util.spec_from_file_location("sg", ROOT / "build-style-guide.py")
@@ -179,6 +180,8 @@ if __name__ == "__main__":
         assert used <= allowed, f"{name} uses a colour outside the five-colour palette"
         path = OUT / f"{name}.png"
         img.save(path, optimize=True)
+        JAVA_OUT.mkdir(parents=True, exist_ok=True)
+        img.save(JAVA_OUT / f"{name}.png", optimize=True)  # same images for the Java web version
         # content hash in the URL, so a redraw is never hidden behind a cached old image
         v = hashlib.sha1(path.read_bytes()).hexdigest()[:8]
         css.append(f'  --scene-{name}: url("/scene/{name}.png?v={v}");')
