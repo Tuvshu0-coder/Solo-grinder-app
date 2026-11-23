@@ -4,7 +4,7 @@ import PomodoroTimer from "@/components/PomodoroTimer";
 export default function PomodoroPage() {
   return (
     <>
-      <PageTitle sub="Төвлөрөх хугацаагаа сонгоод, завсарлагаа мартахгүйгээр хичээллээрэй.">
+      <PageTitle sub="Pick your focus time and study without skipping your breaks.">
         Pomodoro
       </PageTitle>
       <PomodoroTimer />

@@ -8,14 +8,14 @@ import { DAY, toLocalInput } from "@/lib/time";
 import { Dialog, Flash, PageTitle, type SP } from "@/components/ui";
 import { CompleteButton, TaskSummary } from "@/components/TaskRow";
 
-const FILTERS = { open: "Хийх", done: "Дууссан", all: "Бүгд" } as const;
+const FILTERS = { open: "To do", done: "Done", all: "All" } as const;
 
 // urgency groups, in reading order; a task lands in the first one that matches
 const GROUPS = [
-  { key: "late", title: "Хоцорсон", head: "rose" },
-  { key: "soon", title: "24 цагийн дотор", head: "" },
-  { key: "later", title: "Дараа нь", head: "mint" },
-  { key: "done", title: "Дууссан", head: "mint" },
+  { key: "late", title: "Late", head: "rose" },
+  { key: "soon", title: "Due within 24h", head: "" },
+  { key: "later", title: "Later", head: "mint" },
+  { key: "done", title: "Done", head: "mint" },
 ] as const;
 
 export default async function TasksPage({ searchParams }: { searchParams: SP }) {
@@ -50,14 +50,14 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
 
   return (
     <>
-      <PageTitle sub="Эрт дуусгах тусам их XP. 24 цагаас дээш нээлттэй байсан даалгавар эрт урамшуулал авна, өдөрт 3 хүртэл.">
-        Даалгавар
+      <PageTitle sub="The earlier you finish, the more XP. Tasks open for 24h or more earn the early bonus, up to 3 a day.">
+        Tasks
       </PageTitle>
       <Flash searchParams={searchParams} />
 
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="min-w-0" aria-label="Даалгаврын жагсаалт">
-          <nav className="mb-6 flex flex-wrap gap-3" aria-label="Шүүлтүүр">
+        <section className="min-w-0" aria-label="Task list">
+          <nav className="mb-6 flex flex-wrap gap-3" aria-label="Filter">
             {Object.entries(FILTERS).map(([k, v]) => (
               <Link key={k} href={`/tasks?f=${k}`} className={f === k ? "btn" : "btn-sec"} aria-current={f === k ? "page" : undefined}>
                 {v} <span className={f === k ? "" : "muted"}>{tabCount[k as keyof typeof tabCount]}</span>
@@ -68,7 +68,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
           {tasks.length === 0 && (
             <div className="panel">
               <p className="m-0">
-                {f === "done" ? "Дууссан даалгавар алга. Эхнийхээ дуусгаад XP аваарай." : "Хийх даалгавар алга. Баруун талаас шинээр нэмнэ үү."}
+                {f === "done" ? "No finished tasks yet. Finish your first one to earn XP." : "Nothing to do. Add a task on the right."}
               </p>
             </div>
           )}
@@ -90,7 +90,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
                         <div className="min-w-0">
                           <TaskSummary task={t} />
                           {t.deadlineEdited && t.status !== "DONE" && (
-                            <div className="text-butter-dark">Deadline өөрчлөгдсөн тул хамгийн ихдээ ×1.0</div>
+                            <div className="text-butter-dark">Deadline changed, so at most ×1.0</div>
                           )}
                         </div>
                         {t.status === "DONE" ? (
@@ -100,22 +100,22 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
                           </div>
                         ) : (
                           <div className="flex flex-wrap items-center gap-3">
-                            <Dialog id={`task-${t.id}`} label="Засах" title={t.title}>
+                            <Dialog id={`task-${t.id}`} label="Edit" title={t.title}>
                               {canEditDeadline(t, now) ? (
                                 <p className="muted m-0">{canEditDeadline(t, now)}</p>
                               ) : (
                                 <form action={editDeadline} className="grid gap-2">
                                   <input type="hidden" name="id" value={t.id} />
-                                  <label className="label" htmlFor={`dl-${t.id}`}>Шинэ deadline</label>
+                                  <label className="label" htmlFor={`dl-${t.id}`}>New deadline</label>
                                   <input id={`dl-${t.id}`} name="deadline" type="datetime-local" className="input" defaultValue={toLocalInput(t.deadline)} min={minDl} max={maxDl} required />
-                                  <p className="m-0 text-butter-dark">Зөвхөн нэг удаа солино. Солисны дараа хамгийн ихдээ ×1.0.</p>
-                                  <button className="btn justify-self-start">Deadline хадгалах</button>
+                                  <p className="m-0 text-butter-dark">You can change it once. After that the task earns at most ×1.0.</p>
+                                  <button className="btn justify-self-start">Save deadline</button>
                                 </form>
                               )}
                               <form action={deleteTask} className="dash-sep grid gap-2 pt-4">
                                 <input type="hidden" name="id" value={t.id} />
-                                <p className="m-0">Устгасан даалгавар буцаж сэргэхгүй.</p>
-                                <button className="btn-danger justify-self-start">Даалгавар устгах</button>
+                                <p className="m-0">A deleted task can&apos;t be restored.</p>
+                                <button className="btn-danger justify-self-start">Delete task</button>
                               </form>
                             </Dialog>
                             <CompleteButton id={t.id} returnTo={returnTo} />
@@ -130,19 +130,19 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
           </div>
         </section>
 
-        <aside className="panel lg:sticky lg:top-8" aria-label="Шинэ даалгавар">
+        <aside className="panel lg:sticky lg:top-8" aria-label="New task">
           <div className="panel-head">
-            <h2 className="m-0 text-base font-normal">Шинэ даалгавар</h2>
+            <h2 className="m-0 text-base font-normal">New task</h2>
           </div>
           {subjects.length === 0 ? (
             <div className="grid gap-3">
-              <p className="m-0">Даалгавар нэг хичээлд харьяалагдана. Эхлээд хичээлээ нэмнэ үү.</p>
-              <Link href="/subjects" className="btn justify-self-start">Хичээл нэмэх</Link>
+              <p className="m-0">Every task belongs to a subject. Add a subject first.</p>
+              <Link href="/subjects" className="btn justify-self-start">Add a subject</Link>
             </div>
           ) : (
             <form action={createTask} className="grid gap-4">
               <div>
-                <label className="label" htmlFor="t-subject">Хичээл</label>
+                <label className="label" htmlFor="t-subject">Subject</label>
                 <select id="t-subject" name="subjectId" className="input" required>
                   {subjects.map((s) => (
                     <option key={s.id} value={s.id}>{s.name}</option>
@@ -150,7 +150,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
                 </select>
               </div>
               <div>
-                <label className="label" htmlFor="t-type">Төрөл</label>
+                <label className="label" htmlFor="t-type">Type</label>
                 <select id="t-type" name="type" className="input" required>
                   {Object.entries(TASK_TYPES).map(([k, v]) => (
                     <option key={k} value={k}>{v}</option>
@@ -158,15 +158,15 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
                 </select>
               </div>
               <div>
-                <label className="label" htmlFor="t-title">Нэр</label>
-                <input id="t-title" name="title" className="input" placeholder="ж: Лаб 3, SQL JOIN" required maxLength={120} />
+                <label className="label" htmlFor="t-title">Name</label>
+                <input id="t-title" name="title" className="input" placeholder="e.g. Lab 3, SQL JOIN" required maxLength={120} />
               </div>
               <div>
                 <label className="label" htmlFor="t-deadline">Deadline</label>
                 <input id="t-deadline" name="deadline" type="datetime-local" className="input" defaultValue={defDl} min={minDl} max={maxDl} required />
-                <p className="muted m-0 mt-1">3 цагаас 30 хоногийн хооронд</p>
+                <p className="muted m-0 mt-1">Between 3 hours and 30 days from now</p>
               </div>
-              <button className="btn">Даалгавар нэмэх</button>
+              <button className="btn">Add task</button>
             </form>
           )}
         </aside>

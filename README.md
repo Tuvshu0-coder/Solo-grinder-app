@@ -1,6 +1,6 @@
 # Solo Grinding
 
-Хичээлийг тоглоом болгох систем — Next.js 15 + Prisma + SQLite.
+Turns your coursework into a game — Next.js 15 + Prisma + SQLite.
 Implements the requirements in `../section8_revised_mn.txt` (rules 1–22).
 
 ## Run

@@ -154,8 +154,8 @@ export interface CompleteResult {
 export async function completeTask(userId: number, taskId: number, now = new Date()): Promise<CompleteResult> {
   return prisma.$transaction(async (tx) => {
     const task = await tx.task.findFirst({ where: { id: taskId, subject: { userId } } });
-    if (!task) throw new Error("Даалгавар олдсонгүй.");
-    if (task.status === "DONE") throw new Error("Даалгавар аль хэдийн дууссан.");
+    if (!task) throw new Error("Task not found.");
+    if (task.status === "DONE") throw new Error("This task is already done.");
 
     const today = dayKey(now);
     const user = await tx.user.findUniqueOrThrow({ where: { id: userId } });

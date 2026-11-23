@@ -69,7 +69,7 @@ export default function PomodoroTimer() {
         setRunning(false);
         setMode(nextMode);
         setTimeLeft(durationInSeconds(nextMode, focusMinutes, breakMinutes));
-        setPhaseNotice(mode === "focus" ? "Төвлөрөх цаг дууслаа. Амралтаа эхлүүлээрэй!" : "Амралт дууслаа. Дараагийн төвлөрлөө эхлүүлээрэй!");
+        setPhaseNotice(mode === "focus" ? "Focus time is over. Start your break!" : "Break is over. Start your next focus session!");
         deadlineRef.current = null;
       }
     };
@@ -138,7 +138,7 @@ export default function PomodoroTimer() {
     }
 
     if (!window.AudioContext) {
-      setAudioError("Энэ хөтөч lo-fi audio тоглуулах боломжгүй байна.");
+      setAudioError("This browser can't play the lo-fi audio.");
       return;
     }
 
@@ -165,7 +165,7 @@ export default function PomodoroTimer() {
     } catch (error) {
       console.error("Could not start lo-fi audio", error);
       if (context && context.state !== "closed") await context.close();
-      setAudioError("Lo-fi хөгжим эхлүүлж чадсангүй. Хөтчийн audio тохиргоогоо шалгана уу.");
+      setAudioError("Couldn't start the lo-fi music. Check your browser's audio settings.");
     }
   }
 
@@ -173,8 +173,8 @@ export default function PomodoroTimer() {
     <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
       <section className="panel">
         <div className="panel-head mint">
-          <span>{mode === "focus" ? "Төвлөрөх цаг" : "Амрах цаг"}</span>
-          <span className="muted">{running ? "ЯВЖ БАЙНА" : "БЭЛЭН"}</span>
+          <span>{mode === "focus" ? "Focus time" : "Break time"}</span>
+          <span className="muted">{running ? "Running" : "Ready"}</span>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-8 py-5">
@@ -195,35 +195,35 @@ export default function PomodoroTimer() {
             </svg>
             <div className="relative text-center" role="timer" aria-live="off">
               <div className="text-3xl tabular-nums">{minutes}:{seconds}</div>
-              <div className="muted text-sm">{mode === "focus" ? "ТӨВЛӨРӨЛ" : "АМРАЛТ"}</div>
+              <div className="muted text-sm">{mode === "focus" ? "Focus" : "Break"}</div>
             </div>
           </div>
 
           <div className="flex min-w-[180px] flex-col items-center gap-3">
             <div className="flex gap-2">
               <button type="button" className={mode === "focus" ? "btn" : "btn-sec"} onClick={() => chooseMode("focus")} disabled={running}>
-                Төвлөрөх
+                Focus
               </button>
               <button type="button" className={mode === "break" ? "btn" : "btn-sec"} onClick={() => chooseMode("break")} disabled={running}>
-                Амрах
+                Break
               </button>
             </div>
             <div className="flex gap-3">
               {running ? (
-                <button type="button" className="btn-sec" onClick={pauseTimer}>Түр зогсоох</button>
+                <button type="button" className="btn-sec" onClick={pauseTimer}>Pause</button>
               ) : (
-                <button type="button" className="btn" onClick={startTimer}>Эхлүүлэх</button>
+                <button type="button" className="btn" onClick={startTimer}>Start</button>
               )}
-              <button type="button" className="btn-ghost" onClick={() => chooseMode(mode)}>Дахин эхлүүлэх</button>
+              <button type="button" className="btn-ghost" onClick={() => chooseMode(mode)}>Restart</button>
             </div>
           </div>
         </div>
 
         <div className="mt-2 border-t-2 border-dashed border-[var(--line)] pt-4">
-          <h2 className="card-title">Цагийн тохиргоо</h2>
+          <h2 className="card-title">Timer settings</h2>
           <form onSubmit={applyDurations} className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
             <label className="block">
-              <span className="label">Төвлөрөх (минут)</span>
+              <span className="label">Focus (minutes)</span>
               <input
                 className="input"
                 type="number"
@@ -238,7 +238,7 @@ export default function PomodoroTimer() {
               />
             </label>
             <label className="block">
-              <span className="label">Амрах (минут)</span>
+              <span className="label">Break (minutes)</span>
               <input
                 className="input"
                 type="number"
@@ -252,16 +252,16 @@ export default function PomodoroTimer() {
                 disabled={running}
               />
             </label>
-            <button type="submit" className="btn-sec" disabled={running}>Хадгалах</button>
+            <button type="submit" className="btn-sec" disabled={running}>Save</button>
           </form>
-          <p className="muted mb-0 mt-2 text-sm">Анхны тохиргоо: 25 минут төвлөрөөд, 5 минут амарна.</p>
+          <p className="muted mb-0 mt-2 text-sm">Default: 25 minutes of focus, then a 5 minute break.</p>
         </div>
         {phaseNotice && <p className="dialog mt-4 mb-0" role="status">{phaseNotice}</p>}
       </section>
 
       <section className="panel">
         <div className="panel-head">
-          <span>Хичээлийн булан</span>
+          <span>Study corner</span>
           <span className="muted">LO-FI STUDY</span>
         </div>
         <div className="relative isolate h-[270px] overflow-hidden border-4 border-[var(--ink)] bg-[var(--violet-light)] sm:h-[310px]">
@@ -304,11 +304,11 @@ export default function PomodoroTimer() {
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="card-title mb-0">Нам гүм lo-fi аялгуу</h2>
-            <p className="muted m-0 text-sm">Хөтөч дээр үүсэх зөөлөн хөгжим · таталт шаардлагагүй</p>
+            <h2 className="card-title mb-0">Quiet lo-fi music</h2>
+            <p className="muted m-0 text-sm">Soft music made in your browser, nothing to download</p>
           </div>
           <button type="button" className={lofiPlaying ? "btn-sec" : "btn"} onClick={toggleLofi} aria-pressed={lofiPlaying}>
-            {lofiPlaying ? "Хөгжим унтраах" : "Хөгжим асаах"}
+            {lofiPlaying ? "Stop music" : "Play music"}
           </button>
         </div>
         {audioError && <p className="mt-2 mb-0 text-sm text-rose" role="alert">{audioError}</p>}

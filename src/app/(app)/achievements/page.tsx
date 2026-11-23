@@ -28,13 +28,13 @@ export default async function AchievementsPage() {
 
   return (
     <>
-      <PageTitle sub="Achievement бүрийг нэг л удаа авна.">Achievement</PageTitle>
+      <PageTitle sub="Each achievement can be earned once.">Achievement</PageTitle>
 
       <div className="hud mb-10 flex flex-wrap items-center gap-x-8 gap-y-3">
         <Icon name="medal" scale={4} />
         <div className="text-3xl">{mine.length}/{all.length}</div>
         <div className="min-w-[200px] flex-1">
-          <div className="muted">нээгдсэн</div>
+          <div className="muted">unlocked</div>
           <Seg value={mine.length} max={all.length} />
         </div>
       </div>
@@ -44,7 +44,7 @@ export default async function AchievementsPage() {
           <section key={l.type} className="panel">
             <div className="panel-head">
               <h2 className="m-0 text-base font-normal">{l.label}</h2>
-              <span>Одоо {current[l.type] ?? 0}</span>
+              <span>Now {current[l.type] ?? 0}</span>
             </div>
             <ol className="ladder">
               {l.tiers.map((a, i) => {
@@ -64,7 +64,7 @@ export default async function AchievementsPage() {
                       </div>
                       <p className="muted m-0">{a.description}</p>
                       {at ? (
-                        <p className="m-0 text-violet-dark">{fmt(at).slice(0, 10)}-нд нээгдсэн</p>
+                        <p className="m-0 text-violet-dark">Unlocked {fmt(at).slice(0, 10)}</p>
                       ) : (
                         <div className="flex flex-wrap items-center gap-x-3">
                           <Seg value={value} max={a.threshold} blocks={Math.min(a.threshold, 10)} />

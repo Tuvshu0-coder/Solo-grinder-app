@@ -8,10 +8,10 @@ export function timeLeft(deadline: Date, now = new Date()): { text: string; tone
   const abs = Math.abs(ms);
   const d = Math.floor(abs / (24 * HOUR));
   const h = Math.floor((abs % (24 * HOUR)) / HOUR);
-  const span = d > 0 ? `${d} хоног ${h} цаг` : `${h} цаг`;
-  if (ms < 0) return { text: `${span} хоцорсон`, tone: "text-rose-dark" };
-  if (ms < 24 * HOUR) return { text: `${span} үлдсэн`, tone: "text-butter-dark" };
-  return { text: `${span} үлдсэн`, tone: "muted" };
+  const span = d > 0 ? `${d}d ${h}h` : `${h}h`;
+  if (ms < 0) return { text: `${span} late`, tone: "text-rose-dark" };
+  if (ms < 24 * HOUR) return { text: `${span} left`, tone: "text-butter-dark" };
+  return { text: `${span} left`, tone: "muted" };
 }
 
 export function StatusBadge({ status }: { status: string }) {
@@ -25,7 +25,7 @@ export function CompleteButton({ id, returnTo }: { id: number; returnTo: string 
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="returnTo" value={returnTo} />
       <button className="btn">
-        <Icon name="check" scale={2} /> Дууссан
+        <Icon name="check" scale={2} /> Done
       </button>
     </form>
   );

@@ -7,11 +7,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="shell">
       <Nav
         username={admin.username}
-        subtitle="Админ"
+        subtitle="Admin"
         links={[
-          { href: "/admin", label: "Статистик" },
-          { href: "/admin/users", label: "Хэрэглэгч" },
-          { href: "/admin/quests", label: "Quest загвар" },
+          { href: "/admin", label: "Stats" },
+          { href: "/admin/users", label: "Users" },
+          { href: "/admin/quests", label: "Quest templates" },
           { href: "/admin/achievements", label: "Achievement" },
           { href: "/admin/levels", label: "Level" },
         ]}

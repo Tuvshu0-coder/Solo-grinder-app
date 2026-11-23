@@ -9,10 +9,10 @@ export default async function LoginPage({ searchParams }: { searchParams: SP }) 
   if (user) redirect(user.role === "ADMIN" ? "/admin" : "/");
   return (
     <AuthForm
-      title="Нэвтрэх"
+      title="Log in"
       action={login}
-      submit="Нэвтрэх"
-      alt={{ href: "/register", text: "Бүртгэлгүй юу?", link: "Бүртгүүлэх" }}
+      submit="Log in"
+      alt={{ href: "/register", text: "No account yet?", link: "Sign up" }}
       searchParams={searchParams}
     />
   );

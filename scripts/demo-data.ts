@@ -8,8 +8,8 @@ import { DAY, HOUR } from "../src/lib/time";
 
 const TYPES = ["HOMEWORK", "LAB", "INDEPENDENT", "EXAM_PREP", "READING"];
 const TITLES = [
-  "Лаб 3 — SQL JOIN", "ER диаграм зурах", "React компонент", "Интеграл бодлого", "Бие даалт 2",
-  "Шалгалтын бэлтгэл — 1-р бүлэг", "Унших: 4-р бүлэг", "Лаб 4 — Индекс", "Форм validation", "Матриц бодлого",
+  "Lab 3 — SQL JOIN", "Draw an ER diagram", "React component", "Integral problems", "Independent work 2",
+  "Exam prep — chapter 1", "Read: chapter 4", "Lab 4 — Indexes", "Form validation", "Matrix problems",
 ];
 
 async function main() {
@@ -26,7 +26,7 @@ async function main() {
   await prisma.user.update({ where: { id: user.id }, data: { totalXp: 0, levelId: 1, streak: 0, lastActiveDate: null } });
 
   const subjects = [];
-  for (const name of ["Өгөгдлийн сан", "Веб програмчлал", "Математик"]) {
+  for (const name of ["Databases", "Web programming", "Math"]) {
     subjects.push(await prisma.subject.create({ data: { userId: user.id, name } }));
   }
 
@@ -48,17 +48,17 @@ async function main() {
   // today: quests first, then one early completion so today's progress shows
   await ensureDailyQuests(user.id);
   const t = await prisma.task.create({
-    data: { subjectId: subjects[0].id, title: "Лаб 5 — Transaction", type: "LAB", createdAt: new Date(now - 3 * DAY), deadline: new Date(now + 4 * DAY) },
+    data: { subjectId: subjects[0].id, title: "Lab 5 — Transactions", type: "LAB", createdAt: new Date(now - 3 * DAY), deadline: new Date(now + 4 * DAY) },
   });
   await completeTask(user.id, t.id);
 
   // open tasks: one due within 24h, one already late, three upcoming
   const open = [
-    { title: "Бие даалт 3 — тайлан", type: "INDEPENDENT", s: 1, created: -2 * DAY, deadline: 5 * HOUR },
-    { title: "Интеграл — дасгал 12", type: "HOMEWORK", s: 2, created: -4 * DAY, deadline: -20 * HOUR },
-    { title: "Шалгалтын бэлтгэл — SQL", type: "EXAM_PREP", s: 0, created: -1 * DAY, deadline: 2 * DAY },
-    { title: "Унших: React docs", type: "READING", s: 1, created: -1 * DAY, deadline: 4 * DAY + 6 * HOUR },
-    { title: "Лаб 6 — Normalization", type: "LAB", s: 0, created: 0, deadline: 9 * DAY },
+    { title: "Independent work 3 — report", type: "INDEPENDENT", s: 1, created: -2 * DAY, deadline: 5 * HOUR },
+    { title: "Integrals — exercise 12", type: "HOMEWORK", s: 2, created: -4 * DAY, deadline: -20 * HOUR },
+    { title: "Exam prep — SQL", type: "EXAM_PREP", s: 0, created: -1 * DAY, deadline: 2 * DAY },
+    { title: "Read: React docs", type: "READING", s: 1, created: -1 * DAY, deadline: 4 * DAY + 6 * HOUR },
+    { title: "Lab 6 — Normalization", type: "LAB", s: 0, created: 0, deadline: 9 * DAY },
   ];
   for (const o of open) {
     await prisma.task.create({

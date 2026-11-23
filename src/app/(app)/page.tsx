@@ -53,24 +53,24 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
       <Flash searchParams={searchParams} />
 
       {/* ---------- player HUD: the one dark block on the page ---------- */}
-      <section className="hud mb-10 grid grid-cols-1 items-end gap-x-10 gap-y-5 sm:grid-cols-[auto_minmax(0,1fr)]" aria-label="Тоглогч">
+      <section className="hud mb-10 grid grid-cols-1 items-end gap-x-10 gap-y-5 sm:grid-cols-[auto_minmax(0,1fr)]" aria-label="Player">
         <div className="justify-self-center sm:justify-self-start">
           <Hero scale={2} />
         </div>
         <div className="min-w-0">
           <div className="flex flex-wrap items-baseline justify-between gap-x-6">
             <h1 className="m-0 truncate text-3xl font-normal">{user.username}</h1>
-            <span className="muted">Тоглогч No.{String(user.id).padStart(3, "0")}</span>
+            <span className="muted">Player No.{String(user.id).padStart(3, "0")}</span>
           </div>
           <dl className="mt-4 mb-5 grid grid-cols-2 gap-x-8 gap-y-3 md:grid-cols-4">
             <HudStat label="Level" value={user.levelId} />
             <HudStat label="Rank" value={<RankBadge rank={user.level.rank} />} />
-            <HudStat label="Нийт XP" value={user.totalXp.toLocaleString()} />
-            <HudStat label="Streak" value={<span className="flex items-center gap-3"><Icon name="flame" scale={3} />{user.streak} хоног</span>} />
+            <HudStat label="Total XP" value={user.totalXp.toLocaleString()} />
+            <HudStat label="Streak" value={<span className="flex items-center gap-3"><Icon name="flame" scale={3} />{user.streak} days</span>} />
           </dl>
           <div className="flex flex-wrap justify-between gap-x-4">
             <span>Level {user.levelId} → {nextLevel ? nextLevel.id : "MAX"}</span>
-            <span className="muted">{nextLevel ? `${toNext.toLocaleString()} XP дутуу` : "Хамгийн дээд level"}</span>
+            <span className="muted">{nextLevel ? `${toNext.toLocaleString()} XP to go` : "Max level"}</span>
           </div>
           <Bar value={user.totalXp - floor} max={ceil - floor} />
         </div>
@@ -82,13 +82,13 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
           {/* ---------- what is due ---------- */}
           <section className="panel order-1 lg:order-none">
             <div className="panel-head">
-              <h2 className="m-0 text-base font-normal">Дараагийн даалгавар</h2>
-              <Link href="/tasks" className="flex shrink-0 items-center gap-2">Бүгд <Icon name="cursor" scale={2} color={COLORS.white} /></Link>
+              <h2 className="m-0 text-base font-normal">Up next</h2>
+              <Link href="/tasks" className="flex shrink-0 items-center gap-2">All <Icon name="cursor" scale={2} color={COLORS.white} /></Link>
             </div>
             {upcoming.length === 0 ? (
               <div className="flex flex-wrap items-center justify-between gap-4 py-2">
-                <p className="m-0">Хийх даалгавар алга. Шинээр нэмээд XP цуглуул.</p>
-                <Link href="/tasks" className="btn">Даалгавар нэмэх</Link>
+                <p className="m-0">Nothing due. Add a task and start earning XP.</p>
+                <Link href="/tasks" className="btn">Add a task</Link>
               </div>
             ) : (
               <ul className="m-0 list-none p-0">
@@ -105,8 +105,8 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
           {/* ---------- xp chart ---------- */}
           <section className="panel order-4 lg:order-none">
             <div className="panel-head mint">
-              <h2 className="m-0 text-base font-normal">Сүүлийн 14 хоногийн XP</h2>
-              <span className="muted">өдөрт {DAILY_XP_CAP} хүртэл</span>
+              <h2 className="m-0 text-base font-normal">XP, last 14 days</h2>
+              <span className="muted">up to {DAILY_XP_CAP} a day</span>
             </div>
             <div className="flex items-end gap-[6px]" style={{ height: CHART_H }}>
               {days.map((d) => {
@@ -134,18 +134,18 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
           {/* ---------- today ---------- */}
           <section className="panel order-2 lg:order-none">
             <div className="panel-head">
-              <h2 className="m-0 text-base font-normal">Өнөөдөр</h2>
+              <h2 className="m-0 text-base font-normal">Today</h2>
               <span>{today.slice(5)}</span>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-x-4">
-              <span>Өдрийн XP</span>
+              <span>Daily XP</span>
               <span className={nearCap ? "text-butter-dark" : ""}>{todayXp}/{DAILY_XP_CAP}</span>
             </div>
             <Seg value={todayXp} max={DAILY_XP_CAP} blocks={16} tone={nearCap ? "butter" : "violet"} />
-            {nearCap && <p className="m-0 text-butter-dark">Хязгаарт ойртлоо. Үүнээс хойших XP тоологдохгүй.</p>}
+            {nearCap && <p className="m-0 text-butter-dark">Almost at the cap. XP past it won&apos;t count.</p>}
 
             <h3 className="card-title mt-6">Daily quest</h3>
-            {quests.length === 0 && <p className="muted m-0">Өнөөдөр quest алга.</p>}
+            {quests.length === 0 && <p className="muted m-0">No quests today.</p>}
             <ul className="m-0 grid list-none gap-4 p-0">
               {quests.map((q) => (
                 <li key={q.id}>
@@ -164,12 +164,12 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
           {/* ---------- finish timing ---------- */}
           <section className="panel order-3 lg:order-none">
             <div className="panel-head mint">
-              <h2 className="m-0 text-base font-normal">Дууссан даалгавар</h2>
+              <h2 className="m-0 text-base font-normal">Finished tasks</h2>
               <span className="muted">{done.length}</span>
             </div>
-            <StatRow label="Эрт (×1.2+)" value={early} cls="badge-violet" />
-            <StatRow label="Хугацаандаа" value={onTime} cls="badge-mint" />
-            <StatRow label="Хоцорсон" value={late} cls="badge-rose" />
+            <StatRow label="Early (×1.2+)" value={early} cls="badge-violet" />
+            <StatRow label="On time" value={onTime} cls="badge-mint" />
+            <StatRow label="Late" value={late} cls="badge-rose" />
             <div className="track mt-4 flex" aria-hidden>
               {done.length > 0 && (
                 <>
@@ -183,8 +183,8 @@ export default async function Dashboard({ searchParams }: { searchParams: SP }) 
 
           {/* ---------- recent xp ---------- */}
           <section className="panel order-5 lg:order-none">
-            <div className="panel-head mint"><h2 className="m-0 text-base font-normal">XP-ийн түүх</h2></div>
-            {recent.length === 0 && <p className="muted m-0">Одоогоор XP алга.</p>}
+            <div className="panel-head mint"><h2 className="m-0 text-base font-normal">XP history</h2></div>
+            {recent.length === 0 && <p className="muted m-0">No XP yet.</p>}
             <ul className="m-0 grid list-none gap-1 p-0">
               {recent.map((l) => (
                 <li key={l.id} className="flex items-baseline gap-3">

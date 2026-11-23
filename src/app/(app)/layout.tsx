@@ -12,9 +12,9 @@ export default async function StudentLayout({ children }: { children: React.Reac
         subtitle={`Lv.${user.levelId} · ${user.level.rank}`}
         links={[
           { href: "/", label: "Dashboard" },
-          { href: "/tasks", label: "Даалгавар" },
+          { href: "/tasks", label: "Tasks" },
           { href: "/pomodoro", label: "Pomodoro" },
-          { href: "/subjects", label: "Хичээл" },
+          { href: "/subjects", label: "Subjects" },
           { href: "/achievements", label: "Achievement" },
           { href: "/guild", label: "Guild" },
         ]}

@@ -10,16 +10,16 @@ export default async function AdminLevels({ searchParams }: { searchParams: SP }
 
   return (
     <>
-      <PageTitle sub="Анхдагч босго: 20 × L². Өөрчилсний дараа бүх хэрэглэгчийн level дахин тооцогдоно.">Level ба rank</PageTitle>
+      <PageTitle sub="Default threshold: 20 × L². After a change, every user's level is recalculated.">Levels and ranks</PageTitle>
       <Flash searchParams={searchParams} />
       <div className="card mb-4">
-        <h2 className="card-title">Level нэмэх</h2>
+        <h2 className="card-title">Add level</h2>
         <form action={saveLevel} className="flex flex-wrap items-end gap-2">
           <input type="hidden" name="id" value={nextId} />
           <div className="text-sm">Level {nextId}</div>
           <input name="minXp" type="number" min={0} defaultValue={20 * nextId * nextId} className="input w-36" required />
           <input name="rank" defaultValue="S" className="input w-16" maxLength={1} required />
-          <button className="btn">+ Нэмэх</button>
+          <button className="btn">+ Add</button>
         </form>
       </div>
       <div className="card overflow-x-auto">
@@ -28,8 +28,8 @@ export default async function AdminLevels({ searchParams }: { searchParams: SP }
             <tr>
               <th>Level</th>
               <th>Rank</th>
-              <th>Хэрэглэгч</th>
-              <th>Босго XP / Rank</th>
+              <th>Users</th>
+              <th>Threshold XP / Rank</th>
             </tr>
           </thead>
           <tbody>
@@ -43,7 +43,7 @@ export default async function AdminLevels({ searchParams }: { searchParams: SP }
                     <input type="hidden" name="id" value={l.id} />
                     <input name="minXp" type="number" min={0} defaultValue={l.minXp} className="input w-36" required />
                     <input name="rank" defaultValue={l.rank} className="input w-16" maxLength={1} required />
-                    <button className="btn-ghost">Хадгалах</button>
+                    <button className="btn-ghost">Save</button>
                   </form>
                 </td>
               </tr>

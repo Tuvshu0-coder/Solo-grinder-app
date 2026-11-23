@@ -20,19 +20,19 @@ export default async function AdminStats({ searchParams }: { searchParams: SP })
   ]);
 
   const stats = [
-    ["Нийт оюутан", students],
-    ["Идэвхтэй (7 хоногт)", activeIds.length],
-    ["Түдгэлзүүлсэн", suspended],
+    ["Students", students],
+    ["Active (7 days)", activeIds.length],
+    ["Suspended", suspended],
     ["Guild", guilds],
-    ["Дуусгасан даалгавар", doneTasks],
-    ["Өнөөдөр дуусгасан", doneToday],
-    ["Хоцорсон (дуусаагүй)", lateTasks],
-    ["Олгосон нийт XP", xp._sum.xpAmount ?? 0],
+    ["Tasks finished", doneTasks],
+    ["Finished today", doneToday],
+    ["Late (not done)", lateTasks],
+    ["Total XP given", xp._sum.xpAmount ?? 0],
   ] as const;
 
   return (
     <>
-      <PageTitle sub="Системийн ерөнхий үзүүлэлт">Статистик</PageTitle>
+      <PageTitle sub="How the whole system is doing">Stats</PageTitle>
       <Flash searchParams={searchParams} />
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {stats.map(([label, value]) => (

@@ -11,15 +11,15 @@ function AchievementForm({ a, unlocked }: { a: A; unlocked?: number }) {
     <form action={saveAchievement} className="grid gap-2 md:grid-cols-[1.2fr_2fr_1.3fr_0.6fr_0.6fr_auto] md:items-end">
       <input type="hidden" name="id" value={a.id ?? ""} />
       <div>
-        <label className="label">Нэр</label>
+        <label className="label">Name</label>
         <input name="name" defaultValue={a.name} className="input" required />
       </div>
       <div>
-        <label className="label">Тайлбар {unlocked != null && <span>· {unlocked} хэрэглэгч авсан</span>}</label>
+        <label className="label">Description {unlocked != null && <span>({unlocked} users earned it)</span>}</label>
         <input name="description" defaultValue={a.description} className="input" />
       </div>
       <div>
-        <label className="label">Нөхцөл</label>
+        <label className="label">Condition</label>
         <select name="conditionType" defaultValue={a.conditionType ?? "STREAK"} className="input">
           {Object.entries(CONDITION_TYPES).map(([k, v]) => (
             <option key={k} value={k}>{v}</option>
@@ -27,14 +27,14 @@ function AchievementForm({ a, unlocked }: { a: A; unlocked?: number }) {
         </select>
       </div>
       <div>
-        <label className="label">Босго</label>
+        <label className="label">Threshold</label>
         <input name="threshold" type="number" min={1} defaultValue={a.threshold ?? 1} className="input" required />
       </div>
       <div>
         <label className="label">XP</label>
         <input name="xpReward" type="number" min={0} defaultValue={a.xpReward ?? 50} className="input" required />
       </div>
-      <button className="btn h-9">{a.id ? "Хадгалах" : "+ Нэмэх"}</button>
+      <button className="btn h-9">{a.id ? "Save" : "+ Add"}</button>
     </form>
   );
 }
@@ -47,10 +47,10 @@ export default async function AdminAchievements({ searchParams }: { searchParams
   });
   return (
     <>
-      <PageTitle sub="Achievement-ийн XP өдрийн 400 XP-ийн хязгаарт багтана.">Achievement</PageTitle>
+      <PageTitle sub="Achievement XP counts toward the 400 XP daily cap.">Achievement</PageTitle>
       <Flash searchParams={searchParams} />
       <div className="card mb-4">
-        <h2 className="card-title">Шинэ achievement</h2>
+        <h2 className="card-title">New achievement</h2>
         <AchievementForm a={{}} />
       </div>
       <div className="space-y-3">

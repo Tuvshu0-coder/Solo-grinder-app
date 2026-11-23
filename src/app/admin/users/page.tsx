@@ -17,23 +17,23 @@ export default async function AdminUsers({ searchParams }: { searchParams: SP })
 
   return (
     <>
-      <PageTitle sub="Түдгэлзүүлсэн хэрэглэгч нэвтрэх боломжгүй, XP нь хадгалагдаж, leaderboard-оос нуугдана.">Хэрэглэгч</PageTitle>
+      <PageTitle sub="Suspended users can't log in. Their XP is kept and they're hidden from leaderboards.">Users</PageTitle>
       <Flash searchParams={searchParams} />
       <form className="mb-4 flex max-w-sm gap-2">
-        <input name="q" defaultValue={q} className="input" placeholder="Нэвтрэх нэрээр хайх" />
-        <button className="btn-ghost">Хайх</button>
+        <input name="q" defaultValue={q} className="input" placeholder="Search by username" />
+        <button className="btn-ghost">Search</button>
       </form>
       <div className="card overflow-x-auto">
         <table className="table">
           <thead>
             <tr>
-              <th>Нэр</th>
+              <th>Name</th>
               <th>Level</th>
               <th>XP</th>
               <th>Streak</th>
               <th>Guild</th>
-              <th>Бүртгүүлсэн</th>
-              <th>Төлөв</th>
+              <th>Joined</th>
+              <th>Status</th>
               <th />
             </tr>
           </thead>
@@ -52,9 +52,9 @@ export default async function AdminUsers({ searchParams }: { searchParams: SP })
                 <td className="text-muted">{fmt(u.createdAt)}</td>
                 <td>
                   {u.isSuspended ? (
-                    <span className="badge bg-bad/15 text-bad">Түдгэлзсэн</span>
+                    <span className="badge bg-bad/15 text-bad">Suspended</span>
                   ) : (
-                    <span className="badge bg-good/15 text-good">Идэвхтэй</span>
+                    <span className="badge bg-good/15 text-good">Active</span>
                   )}
                 </td>
                 <td className="text-right">
@@ -62,7 +62,7 @@ export default async function AdminUsers({ searchParams }: { searchParams: SP })
                     <input type="hidden" name="userId" value={u.id} />
                     <input type="hidden" name="suspend" value={u.isSuspended ? "0" : "1"} />
                     <button className={u.isSuspended ? "btn-ghost" : "btn-danger"}>
-                      {u.isSuspended ? "Сэргээх" : "Түдгэлзүүлэх"}
+                      {u.isSuspended ? "Restore" : "Suspend"}
                     </button>
                   </form>
                 </td>
@@ -70,7 +70,7 @@ export default async function AdminUsers({ searchParams }: { searchParams: SP })
             ))}
           </tbody>
         </table>
-        {users.length === 0 && <p className="text-sm text-muted">Хэрэглэгч олдсонгүй.</p>}
+        {users.length === 0 && <p className="text-sm text-muted">No users found.</p>}
       </div>
     </>
   );

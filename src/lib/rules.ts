@@ -59,9 +59,9 @@ export function defaultMinXp(level: number): number {
 /** Validate a new deadline (rule 3). Returns an error message or null. */
 export function validateDeadline(deadline: Date, from: Date): string | null {
   const diff = deadline.getTime() - from.getTime();
-  if (Number.isNaN(diff)) return "Deadline буруу байна.";
-  if (diff < DEADLINE_MIN_MS) return "Deadline хамгийн багадаа 3 цагийн дараа байх ёстой.";
-  if (diff > DEADLINE_MAX_MS) return "Deadline хамгийн ихдээ 30 хоногийн дараа байх ёстой.";
+  if (Number.isNaN(diff)) return "Invalid deadline.";
+  if (diff < DEADLINE_MIN_MS) return "The deadline must be at least 3 hours from now.";
+  if (diff > DEADLINE_MAX_MS) return "The deadline must be at most 30 days from now.";
   return null;
 }
 
@@ -70,10 +70,10 @@ export function canEditDeadline(
   t: { deadline: Date; deadlineEdited: boolean; status: string },
   now: Date,
 ): string | null {
-  if (t.status === "DONE") return "Дууссан даалгаврын deadline-ийг өөрчлөх боломжгүй.";
-  if (t.deadlineEdited) return "Deadline-ийг зөвхөн нэг удаа өөрчилж болно.";
+  if (t.status === "DONE") return "A finished task's deadline can't be changed.";
+  if (t.deadlineEdited) return "The deadline can be changed only once.";
   if (t.deadline.getTime() - now.getTime() < DEADLINE_EDIT_MIN_LEFT_MS)
-    return "Deadline хүртэл 24 цагаас бага үлдсэн тул өөрчлөх боломжгүй.";
+    return "Less than 24 hours are left, so the deadline can't be changed.";
   return null;
 }
 

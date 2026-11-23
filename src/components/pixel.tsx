@@ -59,13 +59,13 @@ export function Hero({ skin = 0, hair = 0, scale = 4, bob = true }: { skin?: num
   return (
     <span className="hero" style={style}>
       <Sprite data={HERO_SHADOW} palette={{ x: COLORS.line }} scale={scale} className="hero-shadow" style={{ top: HERO_SHADOW_TOP * scale }} />
-      <Sprite data={HERO} palette={palette} scale={scale} className={bob ? "hero-sprite" : ""} title="Таны дүр" />
+      <Sprite data={HERO} palette={palette} scale={scale} className={bob ? "hero-sprite" : ""} title="Your character" />
     </span>
   );
 }
 
 export function Coin({ scale = 2 }: { scale?: number }) {
-  return <Sprite data={COIN} palette={COIN_PALETTE} scale={scale} title="зоос" />;
+  return <Sprite data={COIN} palette={COIN_PALETTE} scale={scale} title="coin" />;
 }
 
 export function Icon({ name, scale = 3, color }: { name: "check" | "cursor" | "flame" | "lock" | "medal"; scale?: number; color?: string }) {

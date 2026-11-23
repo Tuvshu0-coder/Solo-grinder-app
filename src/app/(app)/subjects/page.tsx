@@ -16,20 +16,20 @@ export default async function SubjectsPage({ searchParams }: { searchParams: SP 
 
   return (
     <>
-      <PageTitle sub="Даалгавар бүр нэг хичээлд харьяалагдана.">Хичээл</PageTitle>
+      <PageTitle sub="Every task belongs to one subject.">Subjects</PageTitle>
       <Flash searchParams={searchParams} />
 
       <form action={addSubject} className="panel mb-10 flex flex-wrap items-end gap-4">
         <div className="min-w-[240px] flex-1">
-          <label className="label" htmlFor="s-name">Шинэ хичээл</label>
-          <input id="s-name" name="name" className="input" placeholder="ж: Өгөгдлийн сан" required maxLength={60} />
+          <label className="label" htmlFor="s-name">New subject</label>
+          <input id="s-name" name="name" className="input" placeholder="e.g. Databases" required maxLength={60} />
         </div>
-        <button className="btn">Хичээл нэмэх</button>
+        <button className="btn">Add subject</button>
       </form>
 
       {subjects.length === 0 ? (
         <div className="panel">
-          <p className="m-0">Хичээл алга. Дээрх талбарт эхний хичээлээ бичээд нэмнэ үү.</p>
+          <p className="m-0">No subjects yet. Type your first one above and add it.</p>
         </div>
       ) : (
         <ul className="m-0 grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 xl:grid-cols-3">
@@ -42,31 +42,31 @@ export default async function SubjectsPage({ searchParams }: { searchParams: SP 
               <li key={s.id} className="panel flex flex-col gap-3">
                 <h2 className="m-0 text-xl font-normal break-words">{s.name}</h2>
                 {total === 0 ? (
-                  <p className="muted m-0">Даалгавар алга</p>
+                  <p className="muted m-0">No tasks yet</p>
                 ) : (
                   <div className="flex flex-wrap items-center gap-x-4">
                     <Seg value={done} max={total} blocks={Math.min(total, MAX_PELLETS)} />
-                    <span className="muted">{done}/{total} дууссан</span>
+                    <span className="muted">{done}/{total} done</span>
                   </div>
                 )}
                 <div className="flex flex-wrap gap-x-6">
-                  <span>{open} хийх</span>
-                  {late > 0 && <span className="text-rose-dark">{late} хоцорсон</span>}
+                  <span>{open} to do</span>
+                  {late > 0 && <span className="text-rose-dark">{late} late</span>}
                 </div>
                 <div className="mt-auto pt-2">
-                  <Dialog id={`subject-${s.id}`} label="Засах" title={s.name}>
+                  <Dialog id={`subject-${s.id}`} label="Edit" title={s.name}>
                     <form action={renameSubject} className="grid gap-2">
                       <input type="hidden" name="id" value={s.id} />
-                      <label className="label" htmlFor={`sn-${s.id}`}>Нэр</label>
+                      <label className="label" htmlFor={`sn-${s.id}`}>Name</label>
                       <input id={`sn-${s.id}`} name="name" defaultValue={s.name} className="input" required maxLength={60} />
-                      <button className="btn justify-self-start">Нэр хадгалах</button>
+                      <button className="btn justify-self-start">Save name</button>
                     </form>
                     <form action={deleteSubject} className="dash-sep grid gap-2 pt-4">
                       <input type="hidden" name="id" value={s.id} />
                       <p className="m-0">
-                        {total > 0 ? `Хичээл болон түүний ${total} даалгавар бүгд устна.` : "Хичээл устна."} Буцаж сэргэхгүй.
+                        {total > 0 ? `This deletes the subject and all ${total} of its tasks.` : "This deletes the subject."} It can&apos;t be restored.
                       </p>
-                      <button className="btn-danger justify-self-start">Хичээл устгах</button>
+                      <button className="btn-danger justify-self-start">Delete subject</button>
                     </form>
                   </Dialog>
                 </div>

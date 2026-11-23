@@ -8,10 +8,10 @@ export default async function RegisterPage({ searchParams }: { searchParams: SP 
   if (await currentUser()) redirect("/");
   return (
     <AuthForm
-      title="Бүртгүүлэх"
+      title="Sign up"
       action={register}
-      submit="Бүртгүүлэх"
-      alt={{ href: "/login", text: "Бүртгэлтэй юу?", link: "Нэвтрэх" }}
+      submit="Sign up"
+      alt={{ href: "/login", text: "Already have an account?", link: "Log in" }}
       searchParams={searchParams}
     />
   );

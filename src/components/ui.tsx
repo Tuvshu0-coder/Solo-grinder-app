@@ -15,7 +15,7 @@ export async function Flash({ searchParams }: { searchParams: SP }) {
   const msg = typeof sp.msg === "string" ? sp.msg : null;
   if (!err && !msg) return null;
   return (
-    <div className={`dialog mb-6 flex items-start gap-3 ${err ? "text-rose" : ""}`} role={err ? "alert" : "status"}>
+    <div className={`dialog mb-6 flex items-start gap-3 ${err ? "text-rose-dark" : ""}`} role={err ? "alert" : "status"}>
       <span className="pt-2">
         <Icon name="cursor" scale={3} color={err ? COLORS.rose : undefined} />
       </span>
@@ -37,7 +37,7 @@ export function Nav({ links, username, subtitle }: { links: { href: string; labe
           {subtitle && <span className="side-sub">{subtitle}</span>}
         </span>
         <form action={logout}>
-          <button className="btn-sec">Гарах</button>
+          <button className="btn-sec">Log out</button>
         </form>
       </div>
     </aside>
@@ -54,7 +54,7 @@ export function Dialog({ id, label, title, btn = "btn-ghost", children }: {
       <div id={id} popover="auto" className="pop" role="dialog" aria-labelledby={`${id}-t`}>
         <h2 id={`${id}-t`} className="pop-title">{title}</h2>
         <div className="grid gap-5">{children}</div>
-        <button type="button" className="btn-sec mt-5" popoverTarget={id} popoverTargetAction="hide">Болих</button>
+        <button type="button" className="btn-sec mt-5" popoverTarget={id} popoverTargetAction="hide">Cancel</button>
       </div>
     </>
   );

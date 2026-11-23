@@ -18,12 +18,12 @@ async function main() {
   if ((await prisma.questTemplate.count()) === 0) {
     await prisma.questTemplate.createMany({
       data: [
-        { title: "Өнөөдөр 2 даалгавар дуусга", goalType: "COMPLETE_N", targetValue: 2, xpReward: 20 },
-        { title: "Өнөөдөр 1 даалгавар дуусга", goalType: "COMPLETE_N", targetValue: 1, xpReward: 20 },
-        { title: "1 даалгаврыг ×1.2 буюу түүнээс дээш үржвэртэй дуусга", goalType: "COMPLETE_EARLY", targetValue: 1, xpReward: 30 },
-        { title: "Хоцорсон төлөвтэй 1 даалгавар дуусга", goalType: "CLEAR_OVERDUE", targetValue: 1, xpReward: 20 },
+        { title: "Finish 2 tasks today", goalType: "COMPLETE_N", targetValue: 2, xpReward: 20 },
+        { title: "Finish 1 task today", goalType: "COMPLETE_N", targetValue: 1, xpReward: 20 },
+        { title: "Finish 1 task at ×1.2 or better", goalType: "COMPLETE_EARLY", targetValue: 1, xpReward: 30 },
+        { title: "Finish 1 late task", goalType: "CLEAR_OVERDUE", targetValue: 1, xpReward: 20 },
         ...Object.entries(TASK_TYPES).map(([type, label]) => ({
-          title: `1 "${label}" даалгавар дуусга`,
+          title: `Finish 1 "${label}" task`,
           goalType: "COMPLETE_TYPE",
           taskType: type,
           targetValue: 1,
@@ -36,14 +36,14 @@ async function main() {
   if ((await prisma.achievement.count()) === 0) {
     await prisma.achievement.createMany({
       data: [
-        { name: "Эхлэл", description: "3 хоногийн streak", conditionType: "STREAK", threshold: 3, xpReward: 20 },
-        { name: "Долоо хоног", description: "7 хоногийн streak", conditionType: "STREAK", threshold: 7, xpReward: 50 },
-        { name: "Хоёр долоо хоног", description: "14 хоногийн streak", conditionType: "STREAK", threshold: 14, xpReward: 100 },
-        { name: "Сарын тэвчээр", description: "30 хоногийн streak", conditionType: "STREAK", threshold: 30, xpReward: 200 },
-        { name: "Анхны алхам", description: "Анхны даалгавраа дуусга", conditionType: "TASKS_DONE", threshold: 1, xpReward: 10 },
-        { name: "Хөдөлмөрч", description: "50 даалгавар дуусга", conditionType: "TASKS_DONE", threshold: 50, xpReward: 100 },
-        { name: "Эрт шувуу", description: "10 даалгаврыг эрт дуусга", conditionType: "EARLY_TASKS", threshold: 10, xpReward: 50 },
-        { name: "D rank", description: "Level 10-д хүр", conditionType: "LEVEL", threshold: 10, xpReward: 50 },
+        { name: "Getting started", description: "3-day streak", conditionType: "STREAK", threshold: 3, xpReward: 20 },
+        { name: "One week", description: "7-day streak", conditionType: "STREAK", threshold: 7, xpReward: 50 },
+        { name: "Two weeks", description: "14-day streak", conditionType: "STREAK", threshold: 14, xpReward: 100 },
+        { name: "Month of grit", description: "30-day streak", conditionType: "STREAK", threshold: 30, xpReward: 200 },
+        { name: "First step", description: "Finish your first task", conditionType: "TASKS_DONE", threshold: 1, xpReward: 10 },
+        { name: "Hard worker", description: "Finish 50 tasks", conditionType: "TASKS_DONE", threshold: 50, xpReward: 100 },
+        { name: "Early bird", description: "Finish 10 tasks early", conditionType: "EARLY_TASKS", threshold: 10, xpReward: 50 },
+        { name: "D rank", description: "Reach level 10", conditionType: "LEVEL", threshold: 10, xpReward: 50 },
       ],
     });
   }

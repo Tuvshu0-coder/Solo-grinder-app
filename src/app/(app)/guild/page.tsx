@@ -24,35 +24,35 @@ export default async function GuildPage({ searchParams }: { searchParams: SP }) 
     const coolingDown = cooldownUntil && cooldownUntil > new Date();
     return (
       <>
-        <PageTitle sub="Найзуудтайгаа guild үүсгэж, долоо хоног бүрийн XP-ээр өрсөлдөөрэй.">Guild</PageTitle>
+        <PageTitle sub="Start a guild with friends and compete on XP every week.">Guild</PageTitle>
         <Flash searchParams={searchParams} />
         {coolingDown && (
           <div className="dialog mb-8" role="status">
-            Guild-ээс гарснаас хойш 7 хоног хүлээнэ. {fmt(cooldownUntil)}-с хойш дахин нэгдэх боломжтой.
+            You left a guild less than 7 days ago. You can join again after {fmt(cooldownUntil)}.
           </div>
         )}
         <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
           <form action={createGuild} className="panel grid gap-4">
-            <div className="panel-head"><h2 className="m-0 text-base font-normal">Шинэ guild</h2></div>
+            <div className="panel-head"><h2 className="m-0 text-base font-normal">New guild</h2></div>
             <div>
-              <label className="label" htmlFor="g-name">Guild-ийн нэр</label>
+              <label className="label" htmlFor="g-name">Guild name</label>
               <input id="g-name" name="name" className="input" required maxLength={40} />
             </div>
-            <button className="btn justify-self-start" disabled={!!coolingDown}>Guild үүсгэх</button>
+            <button className="btn justify-self-start" disabled={!!coolingDown}>Create guild</button>
           </form>
           <form action={joinGuild} className="panel grid gap-4">
-            <div className="panel-head mint"><h2 className="m-0 text-base font-normal">Урилгаар нэгдэх</h2></div>
+            <div className="panel-head mint"><h2 className="m-0 text-base font-normal">Join with a code</h2></div>
             <div>
-              <label className="label" htmlFor="g-code">Урилгын код</label>
-              <input id="g-code" name="code" className="input uppercase" placeholder="ж: 3FA9C21B" required />
+              <label className="label" htmlFor="g-code">Invite code</label>
+              <input id="g-code" name="code" className="input uppercase" placeholder="e.g. 3FA9C21B" required />
             </div>
-            <button className="btn justify-self-start" disabled={!!coolingDown}>Guild-д нэгдэх</button>
+            <button className="btn justify-self-start" disabled={!!coolingDown}>Join guild</button>
           </form>
         </div>
         <ul className="muted m-0 mt-8 grid list-none gap-1 p-0">
-          <li>Нэг guild-д {GUILD_MAX_MEMBERS} хүртэл гишүүн.</li>
-          <li>Leaderboard долоо хоног бүрийн Даваа гарагт шинэчлэгдэнэ.</li>
-          <li>Guild quest биелбэл идэвхтэй гишүүн бүр +{GUILD_QUEST_REWARD} XP авна.</li>
+          <li>Up to {GUILD_MAX_MEMBERS} members per guild.</li>
+          <li>The leaderboard resets every Monday.</li>
+          <li>When the guild quest is done, every active member gets +{GUILD_QUEST_REWARD} XP.</li>
         </ul>
       </>
     );
@@ -71,7 +71,7 @@ export default async function GuildPage({ searchParams }: { searchParams: SP }) 
 
   return (
     <>
-      <PageTitle sub={`${guild.members.length}/${GUILD_MAX_MEMBERS} гишүүн. Энэ долоо хоног ${weekStart}-нд эхэлсэн.`}>
+      <PageTitle sub={`${guild.members.length}/${GUILD_MAX_MEMBERS} members. This week started ${weekStart}.`}>
         {guild.name}
       </PageTitle>
       <Flash searchParams={searchParams} />
@@ -80,8 +80,8 @@ export default async function GuildPage({ searchParams }: { searchParams: SP }) 
         {/* ---------- leaderboard ---------- */}
         <section className="panel">
           <div className="panel-head">
-            <h2 className="m-0 text-base font-normal">Долоо хоногийн leaderboard</h2>
-            <span>Нийт {totalWeekXp} XP</span>
+            <h2 className="m-0 text-base font-normal">Weekly leaderboard</h2>
+            <span>{totalWeekXp} XP total</span>
           </div>
           <ol className="m-0 list-none p-0">
             {board.map((r, i) => {
@@ -91,36 +91,36 @@ export default async function GuildPage({ searchParams }: { searchParams: SP }) 
                   key={r.userId}
                   className={`grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-2 px-2 py-3 sm:grid-cols-[auto_minmax(0,1fr)_auto] ${i > 0 ? "dash-sep" : ""} ${me ? "bg-violet-light" : ""}`}
                 >
-                  <span className="rank sm" style={{ borderImageSource: `var(--frame-rank-${PLACE_FRAME[i] ?? "E"})` }} aria-label={`${i + 1}-р байр`}>
+                  <span className="rank sm" style={{ borderImageSource: `var(--frame-rank-${PLACE_FRAME[i] ?? "E"})` }} aria-label={`Place ${i + 1}`}>
                     {i + 1}
                   </span>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-x-3">
                       <span className="truncate">{r.username}</span>
-                      {me && <span className="muted">(та)</span>}
-                      {r.role === "LEADER" && <span className="badge badge-butter">Удирдагч</span>}
+                      {me && <span className="muted">(you)</span>}
+                      {r.role === "LEADER" && <span className="badge badge-butter">Leader</span>}
                     </div>
                     <div className="mt-1 flex items-center gap-3">
                       <div className="min-w-0 flex-1"><Bar value={r.weekXp} max={topXp} /></div>
                       <span className="w-[6ch] text-right">{r.weekXp}</span>
                     </div>
                     <div className="muted flex flex-wrap gap-x-5">
-                      <span>{r.doneCount} дуусгасан</span>
-                      <span>{r.earlyCount} эрт</span>
+                      <span>{r.doneCount} finished</span>
+                      <span>{r.earlyCount} early</span>
                     </div>
                   </div>
                   {isLeader && !me && (
                     <div className="col-span-2 sm:col-span-1">
-                      <Dialog id={`member-${r.userId}`} label="Удирдах" title={r.username}>
+                      <Dialog id={`member-${r.userId}`} label="Manage" title={r.username}>
                         <form action={transferLeader} className="grid gap-2">
                           <input type="hidden" name="userId" value={r.userId} />
-                          <p className="m-0">Удирдагчийн эрхийг {r.username}-д шилжүүлнэ. Та энгийн гишүүн болно.</p>
-                          <button className="btn-sec justify-self-start">Удирдагч болгох</button>
+                          <p className="m-0">Hand leadership to {r.username}. You become a regular member.</p>
+                          <button className="btn-sec justify-self-start">Make leader</button>
                         </form>
                         <form action={kickMember} className="dash-sep grid gap-2 pt-4">
                           <input type="hidden" name="userId" value={r.userId} />
-                          <p className="m-0">{r.username} guild-ээс хасагдана.</p>
-                          <button className="btn-danger justify-self-start">Гишүүнийг хасах</button>
+                          <p className="m-0">{r.username} will be removed from the guild.</p>
+                          <button className="btn-danger justify-self-start">Remove member</button>
                         </form>
                       </Dialog>
                     </div>
@@ -130,7 +130,7 @@ export default async function GuildPage({ searchParams }: { searchParams: SP }) 
             })}
           </ol>
           <p className="muted m-0 mt-4">
-            Guild-д байх хугацаанд энэ долоо хоногт авсан XP. Guild quest-ийн bonus тооцогдохгүй. Даваа гарагийн 00:00-д шинэчлэгдэнэ.
+            XP earned this week while in the guild. Guild quest bonuses don&apos;t count. Resets Monday at 00:00.
           </p>
         </section>
 
@@ -148,14 +148,14 @@ export default async function GuildPage({ searchParams }: { searchParams: SP }) 
                 </div>
                 <p className="muted m-0">
                   {quest.isCompleted
-                    ? `Биелсэн. Энэ долоо хоногт даалгавар дуусгасан гишүүд +${GUILD_QUEST_REWARD} XP авсан.`
-                    : `Биелвэл энэ долоо хоногт 1+ даалгавар дуусгасан гишүүн бүр +${GUILD_QUEST_REWARD} XP авна.`}
+                    ? `Done. Members who finished a task this week got +${GUILD_QUEST_REWARD} XP.`
+                    : `When it's done, every member who finished 1+ task this week gets +${GUILD_QUEST_REWARD} XP.`}
                 </p>
               </div>
             ) : isLeader ? (
               <form action={setGuildQuest} className="grid gap-4">
                 <div>
-                  <label className="label" htmlFor="q-goal">Зорилт</label>
+                  <label className="label" htmlFor="q-goal">Goal</label>
                   <select id="q-goal" name="goalType" className="input">
                     {Object.entries(GOAL_TYPES).map(([k, v]) => (
                       <option key={k} value={k}>{v}</option>
@@ -163,39 +163,39 @@ export default async function GuildPage({ searchParams }: { searchParams: SP }) 
                   </select>
                 </div>
                 <div>
-                  <label className="label" htmlFor="q-type">Даалгаврын төрөл</label>
+                  <label className="label" htmlFor="q-type">Task type</label>
                   <select id="q-type" name="taskType" className="input">
-                    <option value="">Бүх төрөл</option>
+                    <option value="">Any type</option>
                     {Object.entries(TASK_TYPES).map(([k, v]) => (
                       <option key={k} value={k}>{v}</option>
                     ))}
                   </select>
-                  <p className="muted m-0 mt-1">Зөвхөн «Тодорхой төрөл» зорилтод хэрэглэнэ.</p>
+                  <p className="muted m-0 mt-1">Only used by the &quot;Tasks of one type&quot; goal.</p>
                 </div>
                 <div>
-                  <label className="label" htmlFor="q-target">Нийт тоо (хамгийн багадаа {minTarget})</label>
+                  <label className="label" htmlFor="q-target">Total (at least {minTarget})</label>
                   <input id="q-target" name="targetValue" type="number" min={minTarget} defaultValue={minTarget} className="input" required />
                 </div>
-                <button className="btn">Quest тавих</button>
+                <button className="btn">Set quest</button>
               </form>
             ) : (
-              <p className="muted m-0">Удирдагч энэ долоо хоногийн quest-ийг хараахан тавиагүй байна.</p>
+              <p className="muted m-0">The leader hasn&apos;t set this week&apos;s quest yet.</p>
             )}
           </section>
 
           {/* ---------- invite + leave ---------- */}
           <section className="panel grid gap-4">
-            <div className="panel-head mint"><h2 className="m-0 text-base font-normal">Урилгын код</h2></div>
+            <div className="panel-head mint"><h2 className="m-0 text-base font-normal">Invite code</h2></div>
             <div className="dialog select-all text-center text-3xl tracking-[0.15em]">{guild.inviteCode}</div>
-            <p className="muted m-0">Найзууддаа энэ кодыг илгээгээд нэгдүүлээрэй.</p>
+            <p className="muted m-0">Send this code to friends so they can join.</p>
             <div className="dash-sep pt-4">
-              <Dialog id="leave-guild" label="Guild-ээс гарах" btn="btn-danger" title="Guild-ээс гарах уу?">
+              <Dialog id="leave-guild" label="Leave guild" btn="btn-danger" title="Leave this guild?">
                 <p className="m-0">
-                  Гарсны дараа 7 хоног өөр guild-д нэгдэх боломжгүй.
-                  {isLeader && " Удирдагчийн эрх хамгийн удаан байгаа гишүүнд шилжинэ."}
+                  After leaving, you can&apos;t join another guild for 7 days.
+                  {isLeader && " Leadership passes to the longest-standing member."}
                 </p>
                 <form action={leaveGuild}>
-                  <button className="btn-danger">Guild-ээс гарах</button>
+                  <button className="btn-danger">Leave guild</button>
                 </form>
               </Dialog>
             </div>
