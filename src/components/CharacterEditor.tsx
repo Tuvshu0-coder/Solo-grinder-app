@@ -43,7 +43,7 @@ export default function CharacterEditor({
       if (r.error) return setNote({ err: true, text: r.error });
       setOwned((s) => new Set(s).add(itemId(it)));
       if (r.coins !== undefined) setCoins(r.coins);
-      setNote({ text: `"${it.name}" таных боллоо!` });
+      setNote({ text: `"${it.name}" is yours!` });
       router.refresh();
     });
   }
@@ -52,7 +52,7 @@ export default function CharacterEditor({
     start(async () => {
       const r = await saveAvatar(JSON.stringify(a));
       if (r?.error) return setNote({ err: true, text: r.error });
-      setNote({ text: "Дүр хадгалагдлаа." });
+      setNote({ text: "Character saved." });
       router.refresh();
     });
   }
@@ -60,21 +60,21 @@ export default function CharacterEditor({
   return (
     <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[auto_minmax(0,1fr)]">
       {/* ---------- preview ---------- */}
-      <section className="panel w-full md:sticky md:top-6 md:w-[236px]" aria-label="Таны дүр">
+      <section className="panel w-full md:sticky md:top-6 md:w-[236px]" aria-label="Your character">
         <div className="stage">
           <Hero avatar={a} scale={3} />
         </div>
         <div className="mt-3 flex items-center justify-between gap-3">
-          <span className="muted">Зоос</span>
+          <span className="muted">Coins</span>
           <span className="flex items-center gap-2"><Coin scale={2} />{coins.toLocaleString()}</span>
         </div>
         {unpaid.length > 0 && (
           <p className="mt-3 mb-0 text-[var(--rose-dark)]">
-            Өмсөж үзэж байна: {unpaid.map((it) => it.name).join(", ")}. Хадгалахын тулд эхлээд худалдаж аваарай.
+            Trying on: {unpaid.map((it) => it.name).join(", ")}. Buy it first to save.
           </p>
         )}
         <button type="button" className="btn mt-4 w-full" disabled={pending || unpaid.length > 0} onClick={save}>
-          {mode === "create" ? "Эхлэх" : "Хадгалах"}
+          {mode === "create" ? "Start" : "Save"}
         </button>
         {note && (
           <p className={`mt-3 mb-0 ${note.err ? "text-[var(--rose-dark)]" : ""}`} role={note.err ? "alert" : "status"}>
@@ -85,8 +85,8 @@ export default function CharacterEditor({
 
       {/* ---------- options ---------- */}
       <section className="panel min-w-0">
-        <div className="mb-5 flex flex-wrap gap-2" role="tablist" aria-label="Ангилал">
-          {[{ key: "body" as Tab, label: "Төрх" }, ...CATEGORIES].map((t) => (
+        <div className="mb-5 flex flex-wrap gap-2" role="tablist" aria-label="Categories">
+          {[{ key: "body" as Tab, label: "Looks" }, ...CATEGORIES].map((t) => (
             <button
               key={t.key}
               type="button"
@@ -102,11 +102,11 @@ export default function CharacterEditor({
 
         {tab === "body" ? (
           <>
-            <Swatches label="Арьсны өнгө" value={a.skin} onPick={(i) => setA({ ...a, skin: i })}
+            <Swatches label="Skin" value={a.skin} onPick={(i) => setA({ ...a, skin: i })}
               colors={SKINS.map((s) => ({ name: s.name, hex: s.s[0] }))} />
-            <Swatches label="Үсний өнгө" value={a.hairColor} onPick={(i) => setA({ ...a, hairColor: i })}
+            <Swatches label="Hair colour" value={a.hairColor} onPick={(i) => setA({ ...a, hairColor: i })}
               colors={HAIR_COLORS.map((h) => ({ name: h.name, hex: h.c[0] }))} />
-            <Swatches label="Нүдний өнгө" value={a.eyeColor} onPick={(i) => setA({ ...a, eyeColor: i })}
+            <Swatches label="Eye colour" value={a.eyeColor} onPick={(i) => setA({ ...a, eyeColor: i })}
               colors={EYE_COLORS.map((e) => ({ name: e.name, hex: e.c }))} />
           </>
         ) : (
@@ -144,7 +144,7 @@ function ItemPicker({ cat, avatar, has, onWear, onTint, onBuy, coins, pending }:
         {optional && (
           <button type="button" className={`pick ${cur === null ? "on" : ""}`} aria-pressed={cur === null} onClick={() => onWear(null)}>
             <span className="pick-art">{thumb(null)}</span>
-            <span>Байхгүй</span>
+            <span>None</span>
           </button>
         )}
         {itemsOf(cat).map((it) => {
@@ -154,7 +154,7 @@ function ItemPicker({ cat, avatar, has, onWear, onTint, onBuy, coins, pending }:
               <span className="pick-art">{thumb(it.key)}</span>
               <span className="text-center">{it.name}</span>
               <span className="muted flex items-center gap-2">
-                {it.price === 0 ? "Үнэгүй" : mine ? "Таных" : <><Icon name="lock" scale={2} color={COLORS.gray} /><Coin scale={1} />{it.price}</>}
+                {it.price === 0 ? "Free" : mine ? "Owned" : <><Icon name="lock" scale={2} color={COLORS.gray} /><Coin scale={1} />{it.price}</>}
               </span>
             </button>
           );
@@ -163,7 +163,7 @@ function ItemPicker({ cat, avatar, has, onWear, onTint, onBuy, coins, pending }:
 
       {curItem?.colors && (
         <div className="mt-6">
-          <Swatches label="Өнгө" value={avatar.tint[cat] ?? 0} onPick={onTint}
+          <Swatches label="Colour" value={avatar.tint[cat] ?? 0} onPick={onTint}
             colors={curItem.colors.map((v) => ({ name: v.name, hex: v.palette.U ?? v.palette.a ?? Object.values(v.palette)[0] }))} />
         </div>
       )}
@@ -174,7 +174,7 @@ function ItemPicker({ cat, avatar, has, onWear, onTint, onBuy, coins, pending }:
             {curItem.name} — <Coin scale={2} /> {curItem.price}
           </span>
           <button type="button" className="btn-buy" disabled={pending || coins < curItem.price} onClick={() => onBuy(curItem)}>
-            {coins < curItem.price ? `${curItem.price - coins} зоос дутуу` : "Худалдаж авах"}
+            {coins < curItem.price ? `${curItem.price - coins} more coins needed` : "Buy"}
           </button>
         </div>
       )}

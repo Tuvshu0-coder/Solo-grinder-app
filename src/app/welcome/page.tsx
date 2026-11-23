@@ -14,12 +14,12 @@ export default async function WelcomePage() {
       <div className="mb-8">
         <h1 className="section-title">
           <Icon name="cursor" scale={4} />
-          Дүрээ бүтээ
+          Create your character
         </h1>
         <div className="rule" />
         <p className="m-0">
-          Тавтай морил, {user.username}! Энэ бол таны дүр. Үс, нүд, хувцсаа сонгоод адал явдлаа эхлүүл.
-          Даалгавар хийж цуглуулсан зоосоороо дараа нь шинэ эд зүйлс авч болно.
+          Welcome, {user.username}! This is your character. Pick hair, eyes and an outfit to start your adventure.
+          Later you can buy new items with the coins you earn from tasks.
         </p>
       </div>
       <CharacterEditor initial={DEFAULT_AVATAR} owned={[]} coins={user.coins} mode="create" />

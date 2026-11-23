@@ -20,7 +20,7 @@ export async function saveAvatar(json: string): Promise<{ error?: string }> {
   const avatar = normalizeAvatar(json, (id) => ids.has(id));
   await prisma.user.update({ where: { id: user.id }, data: { avatar: JSON.stringify(avatar) } });
   revalidatePath("/", "layout");
-  if (!user.avatar) redirect("/subjects?msg=" + encodeURIComponent("Дүр бэлэн боллоо! Одоо хичээлүүдээ нэмнэ үү."));
+  if (!user.avatar) redirect("/subjects?msg=" + encodeURIComponent("Your character is ready! Now add your subjects."));
   return {};
 }
 
@@ -28,16 +28,16 @@ export async function saveAvatar(json: string): Promise<{ error?: string }> {
 export async function buyItem(itemId: string): Promise<{ error?: string; coins?: number }> {
   const user = await student();
   const item = ITEM_BY_ID.get(itemId);
-  if (!item || item.price <= 0) return { error: "Энэ зүйлийг худалдаж авах боломжгүй." };
+  if (!item || item.price <= 0) return { error: "This item can't be bought." };
   const result = await prisma.$transaction(async (tx) => {
     const have = await tx.ownedItem.findUnique({ where: { userId_itemId: { userId: user.id, itemId } } });
-    if (have) return { error: "Энэ зүйл аль хэдийн таных." };
+    if (have) return { error: "You already own this item." };
     // decrement only if the balance covers it — atomic, so a double click can't overspend
     const paid = await tx.user.updateMany({
       where: { id: user.id, coins: { gte: item.price } },
       data: { coins: { decrement: item.price } },
     });
-    if (paid.count === 0) return { error: "Зоос хүрэлцэхгүй байна. Даалгавар хийж зоос цуглуулаарай." };
+    if (paid.count === 0) return { error: "Not enough coins. Complete tasks to earn more." };
     await tx.ownedItem.create({ data: { userId: user.id, itemId } });
     const { coins } = await tx.user.findUniqueOrThrow({ where: { id: user.id }, select: { coins: true } });
     return { coins };

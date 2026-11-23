@@ -10,14 +10,14 @@ export default async function StudentLayout({ children }: { children: React.Reac
     <div className="shell">
       <Nav
         username={user.username}
-        subtitle={`Lv.${user.levelId} · ${user.level.rank} · ${user.coins.toLocaleString()} зоос`}
+        subtitle={`Lv.${user.levelId} · ${user.level.rank} · ${user.coins.toLocaleString()} coins`}
         links={[
           { href: "/", label: "Dashboard" },
           { href: "/tasks", label: "Tasks" },
           { href: "/pomodoro", label: "Pomodoro" },
           { href: "/subjects", label: "Subjects" },
           { href: "/achievements", label: "Achievement" },
-          { href: "/character", label: "Дүр" },
+          { href: "/character", label: "Character" },
           { href: "/guild", label: "Guild" },
         ]}
       />

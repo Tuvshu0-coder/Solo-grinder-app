@@ -8,12 +8,12 @@ import { AVATAR_LAYERS, HERO_SKINS, type Palette } from "./sprites";
 export type Category = "hair" | "eyes" | "outfit" | "hat" | "glasses" | "extra";
 
 export const CATEGORIES: { key: Category; label: string; optional: boolean }[] = [
-  { key: "hair", label: "Үс", optional: false },
-  { key: "eyes", label: "Нүд", optional: false },
-  { key: "outfit", label: "Хувцас", optional: false },
-  { key: "hat", label: "Малгай", optional: true },
-  { key: "glasses", label: "Нүдний шил", optional: true },
-  { key: "extra", label: "Дагалдах", optional: true },
+  { key: "hair", label: "Hair", optional: false },
+  { key: "eyes", label: "Eyes", optional: false },
+  { key: "outfit", label: "Outfit", optional: false },
+  { key: "hat", label: "Hat", optional: true },
+  { key: "glasses", label: "Glasses", optional: true },
+  { key: "extra", label: "Extras", optional: true },
 ];
 
 export type ColorVariant = { name: string; palette: Palette };
@@ -45,79 +45,79 @@ const BLUE = { U: "#2c4f8a", u: "#4369a8", g: "#1d355e" };
 
 export const ITEMS: Item[] = [
   // ---- hair
-  { category: "hair", key: "short", name: "Энгийн", price: 0 },
-  { category: "hair", key: "messy", name: "Сэгсгэр", price: 0 },
-  { category: "hair", key: "long", name: "Урт", price: 300 },
-  { category: "hair", key: "spiky", name: "Сэртгэр", price: 400 },
+  { category: "hair", key: "short", name: "Neat", price: 0 },
+  { category: "hair", key: "messy", name: "Messy", price: 0 },
+  { category: "hair", key: "long", name: "Long", price: 300 },
+  { category: "hair", key: "spiky", name: "Spiky", price: 400 },
 
   // ---- eyes
-  { category: "eyes", key: "normal", name: "Энгийн", price: 0 },
-  { category: "eyes", key: "sharp", name: "Хурц", price: 0 },
-  { category: "eyes", key: "happy", name: "Баяртай", price: 150 },
+  { category: "eyes", key: "normal", name: "Normal", price: 0 },
+  { category: "eyes", key: "sharp", name: "Sharp", price: 0 },
+  { category: "eyes", key: "happy", name: "Happy", price: 150 },
 
   // ---- outfits
   {
-    category: "outfit", key: "uniform", name: "Дүрэмт хувцас", price: 0,
+    category: "outfit", key: "uniform", name: "School uniform", price: 0,
     palette: { q: "#bec0cc", L: "#d6ac48" },
-    colors: [{ name: "Хар хөх", palette: NAVY }, { name: "Хар", palette: BLACK }, { name: "Бор улаан", palette: MAROON }],
+    colors: [{ name: "Navy", palette: NAVY }, { name: "Black", palette: BLACK }, { name: "Maroon", palette: MAROON }],
   },
   {
     category: "outfit", key: "hoodie", name: "Hoodie", price: 300,
     palette: { q: "#3a3e44" },
-    colors: [{ name: "Саарал", palette: GRAY }, { name: "Улаан", palette: RED }, { name: "Ногоон", palette: GREEN }],
+    colors: [{ name: "Gray", palette: GRAY }, { name: "Red", palette: RED }, { name: "Green", palette: GREEN }],
   },
   {
-    category: "outfit", key: "track", name: "Спорт хувцас", price: 400,
-    colors: [{ name: "Хар", palette: BLACK }, { name: "Цэнхэр", palette: BLUE }, { name: "Улаан", palette: RED }],
+    category: "outfit", key: "track", name: "Tracksuit", price: 400,
+    colors: [{ name: "Black", palette: BLACK }, { name: "Blue", palette: BLUE }, { name: "Red", palette: RED }],
   },
   {
-    category: "outfit", key: "deel", name: "Монгол дээл", price: 800,
+    category: "outfit", key: "deel", name: "Mongolian deel", price: 800,
     colors: [
-      { name: "Цэнхэр", palette: { ...BLUE, L: "#d6ac48", K: "#d9822b" } },
-      { name: "Улаан", palette: { U: "#8a2c35", u: "#a8434d", g: "#5e1d24", L: "#f2cc6b", K: "#2c4f8a" } },
-      { name: "Ногоон", palette: { U: "#2f6b55", u: "#45876d", g: "#1f4a3a", L: "#d6ac48", K: "#c9636b" } },
+      { name: "Blue", palette: { ...BLUE, L: "#d6ac48", K: "#d9822b" } },
+      { name: "Red", palette: { U: "#8a2c35", u: "#a8434d", g: "#5e1d24", L: "#f2cc6b", K: "#2c4f8a" } },
+      { name: "Green", palette: { U: "#2f6b55", u: "#45876d", g: "#1f4a3a", L: "#d6ac48", K: "#c9636b" } },
     ],
   },
 
   // ---- hats (letters a main · b light · c dark · d detail)
   {
-    category: "hat", key: "cap", name: "Кепка", price: 250,
+    category: "hat", key: "cap", name: "Cap", price: 250,
     colors: [
-      { name: "Улаан", palette: { a: "#c9636b", b: "#e08890", c: "#9e3f47", d: "#fcfbfe" } },
-      { name: "Хар хөх", palette: { a: "#2c3a6a", b: "#4a5a8f", c: "#1a2244", d: "#f2cc6b" } },
-      { name: "Хар", palette: { a: "#26262e", b: "#44444f", c: "#121216", d: "#fcfbfe" } },
+      { name: "Red", palette: { a: "#c9636b", b: "#e08890", c: "#9e3f47", d: "#fcfbfe" } },
+      { name: "Navy", palette: { a: "#2c3a6a", b: "#4a5a8f", c: "#1a2244", d: "#f2cc6b" } },
+      { name: "Black", palette: { a: "#26262e", b: "#44444f", c: "#121216", d: "#fcfbfe" } },
     ],
   },
   {
-    category: "hat", key: "beanie", name: "Ноосон малгай", price: 300,
+    category: "hat", key: "beanie", name: "Beanie", price: 300,
     colors: [
-      { name: "Ягаан", palette: { a: "#c9636b", b: "#e08890", c: "#9e3f47", d: "#fcfbfe" } },
-      { name: "Ногоон", palette: { a: "#4f8a68", b: "#6fa886", c: "#2a4a36", d: "#f2cc6b" } },
-      { name: "Шар", palette: { a: "#f2cc6b", b: "#f7dc96", c: "#c98d6b", d: "#fcfbfe" } },
+      { name: "Pink", palette: { a: "#c9636b", b: "#e08890", c: "#9e3f47", d: "#fcfbfe" } },
+      { name: "Green", palette: { a: "#4f8a68", b: "#6fa886", c: "#2a4a36", d: "#f2cc6b" } },
+      { name: "Yellow", palette: { a: "#f2cc6b", b: "#f7dc96", c: "#c98d6b", d: "#fcfbfe" } },
     ],
   },
   {
-    category: "hat", key: "crown", name: "Титэм", price: 2000,
+    category: "hat", key: "crown", name: "Crown", price: 2000,
     palette: { a: "#f2cc6b", b: "#c98d6b", c: "#c9636b", d: "#fcfbfe" },
   },
 
   // ---- glasses
-  { category: "glasses", key: "round", name: "Нүдний шил", price: 0, palette: { b: "#688496" } },
-  { category: "glasses", key: "sun", name: "Нарны шил", price: 250, palette: { a: "#1a1a22", b: "#5a6a8a" } },
+  { category: "glasses", key: "round", name: "Glasses", price: 0, palette: { b: "#688496" } },
+  { category: "glasses", key: "sun", name: "Sunglasses", price: 250, palette: { a: "#1a1a22", b: "#5a6a8a" } },
 
   // ---- extras
   {
-    category: "extra", key: "scarf", name: "Ороолт", price: 350,
+    category: "extra", key: "scarf", name: "Scarf", price: 350,
     colors: [
-      { name: "Улаан", palette: { a: "#c9636b", b: "#fcfbfe", c: "#c9636b" } },
-      { name: "Цэнхэр", palette: { a: "#2c4f8a", b: "#f2cc6b", c: "#2c4f8a" } },
+      { name: "Red", palette: { a: "#c9636b", b: "#fcfbfe", c: "#c9636b" } },
+      { name: "Blue", palette: { a: "#2c4f8a", b: "#f2cc6b", c: "#2c4f8a" } },
     ],
   },
   {
-    category: "extra", key: "headphones", name: "Чихэвч", price: 500, z: 45,
+    category: "extra", key: "headphones", name: "Headphones", price: 500, z: 45,
     colors: [
-      { name: "Хар", palette: { a: "#2a2a33", c: "#c9636b" } },
-      { name: "Цагаан", palette: { a: "#e5e9ec", c: "#40514e" } },
+      { name: "Black", palette: { a: "#2a2a33", c: "#c9636b" } },
+      { name: "White", palette: { a: "#e5e9ec", c: "#40514e" } },
     ],
   },
 ];
@@ -128,26 +128,26 @@ export const itemsOf = (c: Category) => ITEMS.filter((it) => it.category === c);
 
 // ---- free body colours
 export const SKINS: { name: string; s: [string, string] }[] = HERO_SKINS.map((s, i) => ({
-  name: ["Цайвар", "Шаргал", "Хүрэн", "Бараан"][i] ?? `Арьс ${i + 1}`,
+  name: ["Fair", "Tan", "Brown", "Dark"][i] ?? `Skin ${i + 1}`,
   s: [s[0], s[1]],
 }));
 export const HAIR_COLORS: { name: string; c: [string, string] }[] = [
-  { name: "Бор", c: ["#422e22", "#6e503a"] },
-  { name: "Хар", c: ["#1f1a1e", "#3d3640"] },
-  { name: "Шар", c: ["#c9963f", "#e8c46a"] },
-  { name: "Мөнгөлөг", c: ["#9a97a3", "#c9c6cc"] },
-  { name: "Улаан", c: ["#8a3a2a", "#b4573f"] },
-  { name: "Цэнхэр", c: ["#2f4a7a", "#4f6fa8"] },
-  { name: "Ягаан", c: ["#c9748e", "#e8a0b4"] },
-  { name: "Цагаан", c: ["#d8d4dc", "#f4f2f6"] },
+  { name: "Brown", c: ["#422e22", "#6e503a"] },
+  { name: "Black", c: ["#1f1a1e", "#3d3640"] },
+  { name: "Blonde", c: ["#c9963f", "#e8c46a"] },
+  { name: "Silver", c: ["#9a97a3", "#c9c6cc"] },
+  { name: "Red", c: ["#8a3a2a", "#b4573f"] },
+  { name: "Blue", c: ["#2f4a7a", "#4f6fa8"] },
+  { name: "Pink", c: ["#c9748e", "#e8a0b4"] },
+  { name: "White", c: ["#d8d4dc", "#f4f2f6"] },
 ];
 export const EYE_COLORS: { name: string; c: string }[] = [
-  { name: "Бор", c: "#3a281e" },
-  { name: "Хар", c: "#1a1a22" },
-  { name: "Цэнхэр", c: "#2f5f9a" },
-  { name: "Ногоон", c: "#3f7a4f" },
-  { name: "Шаргал", c: "#9a6a1f" },
-  { name: "Улаан", c: "#8a2f3a" },
+  { name: "Brown", c: "#3a281e" },
+  { name: "Black", c: "#1a1a22" },
+  { name: "Blue", c: "#2f5f9a" },
+  { name: "Green", c: "#3f7a4f" },
+  { name: "Amber", c: "#9a6a1f" },
+  { name: "Red", c: "#8a2f3a" },
 ];
 
 // ---- the saved look (User.avatar, JSON)
