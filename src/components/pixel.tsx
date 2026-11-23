@@ -1,10 +1,11 @@
 // Pixel-art building blocks. Sprite data comes from src/lib/sprites.ts (generated from design/).
 import type { CSSProperties } from "react";
 import {
-  COIN, COIN_PALETTE, COLORS, FLAME_PALETTE, HERO, HERO_HAIRS, HERO_OUTFIT, HERO_SHADOW, HERO_SHADOW_TOP, HERO_SKINS,
+  AVATAR_H, AVATAR_SHADOW_TOP, AVATAR_W, COIN, COIN_PALETTE, COLORS, FLAME_PALETTE, HERO_SHADOW,
   ICON_CHECK, ICON_CURSOR, ICON_FLAME, ICON_LOCK, ICON_MEDAL, LOCK_PALETTE, MEDAL_PALETTE, RANK_STYLE,
   type Palette, type SpriteData,
 } from "@/lib/sprites";
+import { avatarLayers, DEFAULT_AVATAR, type Avatar } from "@/lib/avatar";
 
 type Run = { x: number; y: number; w: number; fill: string };
 
@@ -50,16 +51,38 @@ export function Sprite({
   );
 }
 
+/** The layered character as one crisp SVG. `crop` = [firstRow, rowCount] shows only part of the canvas. */
+export function AvatarSprite({
+  avatar = DEFAULT_AVATAR, scale = 2, crop, className = "", title,
+}: { avatar?: Avatar; scale?: number; crop?: [number, number]; className?: string; title?: string }) {
+  const [y0, h] = crop ?? [0, AVATAR_H];
+  return (
+    <svg
+      className={`sprite ${className}`}
+      width={AVATAR_W * scale}
+      height={h * scale}
+      viewBox={`0 ${y0} ${AVATAR_W} ${h}`}
+      shapeRendering="crispEdges"
+      role={title ? "img" : undefined}
+      aria-label={title}
+      aria-hidden={title ? undefined : true}
+    >
+      {avatarLayers(avatar).map((layer, li) =>
+        runs({ w: AVATAR_W, h: AVATAR_H, rows: layer.rows }, layer.palette).map((r, i) => (
+          <rect key={`${li}-${i}`} x={r.x} y={r.y} width={r.w} height={1} fill={r.fill} />
+        )),
+      )}
+    </svg>
+  );
+}
+
 /** The player's character with ground shadow and 1px idle bob. */
-export function Hero({ skin = 0, hair = 0, scale = 4, bob = true }: { skin?: number; hair?: number; scale?: number; bob?: boolean }) {
-  const s = HERO_SKINS[skin] ?? HERO_SKINS[0];
-  const h = HERO_HAIRS[hair] ?? HERO_HAIRS[0];
-  const palette: Palette = { ...HERO_OUTFIT, S: s[0], s: s[1], H: h[0], J: h[1] };
-  const style = { width: HERO.w * scale, height: HERO.h * scale, "--px-step": `${scale}px` } as CSSProperties;
+export function Hero({ avatar, scale = 4, bob = true }: { avatar?: Avatar; scale?: number; bob?: boolean }) {
+  const style = { width: AVATAR_W * scale, height: AVATAR_H * scale, "--px-step": `${scale}px` } as CSSProperties;
   return (
     <span className="hero" style={style}>
-      <Sprite data={HERO_SHADOW} palette={{ x: COLORS.line }} scale={scale} className="hero-shadow" style={{ top: HERO_SHADOW_TOP * scale }} />
-      <Sprite data={HERO} palette={palette} scale={scale} className={bob ? "hero-sprite" : ""} title="Your character" />
+      <Sprite data={HERO_SHADOW} palette={{ x: COLORS.line }} scale={scale} className="hero-shadow" style={{ top: AVATAR_SHADOW_TOP * scale }} />
+      <AvatarSprite avatar={avatar} scale={scale} className={bob ? "hero-sprite" : ""} title="Your character" />
     </span>
   );
 }

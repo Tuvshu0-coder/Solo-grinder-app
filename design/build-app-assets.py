@@ -19,6 +19,25 @@ C = dict(sg.C)
 C["butter-dark"] = "#8a6417"   # warning *text* on white (butter itself is too light to read)
 C["rose-dark"] = "#9e3f47"     # late/danger *text* on white (rose itself is 3.8:1, under AA)
 
+# Avatar layers (character creator): design/sprites/avatar/<category>/<key>.txt, each a 52x100 canvas,
+# '.' = transparent. The starter art sits 8 rows down so hats have headroom. Names, prices, colours and
+# draw order live in src/lib/avatar.ts.
+AVATAR_W, AVATAR_H = 52, 100
+AVATAR_SHADOW_TOP = 94
+
+
+def avatar_layers():
+    out = {}
+    for f in sorted((ROOT / "sprites" / "avatar").glob("*/*.txt")):
+        rows = f.read_text(encoding="utf-8").splitlines()
+        key = f"{f.parent.name}/{f.stem}"
+        assert len(rows) == AVATAR_H, f"{key}: {len(rows)} rows, expected {AVATAR_H}"
+        for i, r in enumerate(rows):
+            assert len(r) == AVATAR_W, f"{key} row {i}: {len(r)} chars, expected {AVATAR_W}"
+        out[key] = rows
+    return out
+
+
 # 11x12 achievement medal (original): slate ribbon, gold disc lit from top-left like the coin
 MEDAL = [
     "ooo.....ooo",
@@ -120,6 +139,9 @@ def ts():
         f"export const HERO_HAIRS: [string, string][] = {json.dumps([list(h) for h in sg.HAIRS])};\n",
         f"export const HERO_SHADOW_TOP = {sg.SHADOW_TOP};\n",
         f"export const HERO_HAIR_NAMES: string[] = {json.dumps(sg.HAIR_NAMES)};\n\n",
+        f"export const AVATAR_W = {AVATAR_W};\nexport const AVATAR_H = {AVATAR_H};\n",
+        f"export const AVATAR_SHADOW_TOP = {AVATAR_SHADOW_TOP};\n",
+        f"export const AVATAR_LAYERS: Record<string, string[]> = {json.dumps(avatar_layers(), indent=2)};\n\n",
         sprite("COIN", sg.COIN, 12, 12),
         f"export const COIN_PALETTE: Palette = {json.dumps(sg.COIN_PAL)};\n\n",
         sprite("ICON_CHECK", sg.CHECK, 7, 6),

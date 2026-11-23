@@ -45,6 +45,10 @@ The look is defined in `design/` (see `design/STYLE_GUIDE.md`; open `design/styl
 - `python -P design/build-app-assets.py` — regenerates `src/app/pixel.css` (palette + pixel frames) and
   `src/lib/sprites.ts` (character, coin, icons). Never edit those two generated files by hand.
 - Sprites are palette arrays rendered by `<Sprite>` / `<Hero>` in `src/components/pixel.tsx`.
+- **Character creator:** the player's look is layered from `design/sprites/avatar/<category>/<key>.txt`
+  (see `design/sprites/avatar/README.md`). Names, prices and colours: `src/lib/avatar.ts`.
+  New players pick their look on `/welcome`; `/character` is the wardrobe + shop. Coins are earned 1:1 with
+  granted XP (`grantXp`) and spent there.
 
 ## Credits
 

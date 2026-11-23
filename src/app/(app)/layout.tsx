@@ -5,17 +5,19 @@ import { Nav } from "@/components/ui";
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
   if (user.role === "ADMIN") redirect("/admin");
+  if (!user.avatar) redirect("/welcome");
   return (
     <div className="shell">
       <Nav
         username={user.username}
-        subtitle={`Lv.${user.levelId} · ${user.level.rank}`}
+        subtitle={`Lv.${user.levelId} · ${user.level.rank} · ${user.coins.toLocaleString()} зоос`}
         links={[
           { href: "/", label: "Dashboard" },
           { href: "/tasks", label: "Tasks" },
           { href: "/pomodoro", label: "Pomodoro" },
           { href: "/subjects", label: "Subjects" },
           { href: "/achievements", label: "Achievement" },
+          { href: "/character", label: "Дүр" },
           { href: "/guild", label: "Guild" },
         ]}
       />
